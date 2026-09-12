@@ -160,12 +160,8 @@ function App() {
   const [slide, setSlide] = useState(0)
   const next = () => setSlide((value) => Math.min(value + 1, 13))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
-  const handleSlideClick = (event) => {
-    if (event.button !== 0 || event.target.closest('button, a, input, select, textarea')) return
-    next()
-  }
   useEffect(() => { const handleKey = (event) => { if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) })
-  return <main className={`presentation slide-${slide}`} onClick={handleSlideClick}>
+  return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
     <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 14</span></header>
     {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide /> : slide === 4 ? <MiningConceptSlide /> : slide === 5 ? <ProblemSlide /> : slide === 6 ? <WorkflowSlide /> : slide === 7 ? <ResultsSlide /> : slide === 8 ? <PerformanceDetailSlide /> : slide === 9 ? <EvaluationSlide /> : slide === 10 ? <AssociationRulesSlide /> : slide === 11 ? <ProductInsightSlide /> : slide === 12 ? <ConclusionSlide /> : <ThanksSlide />}
