@@ -156,11 +156,16 @@ function TitleSlide() {
   </section>
 }
 
+function RevisiPcy() {
+  return <main className="presentation thanks-slide" aria-labelledby="revisi-pcy-title"><p>ANALISIS BIG DATA · REVISI</p><h1 id="revisi-pcy-title">Revisi <span>PCY</span></h1><div className="thanks-line" aria-hidden="true"><i /><i /><i /></div><small>Halaman revisi presentasi algoritma PCY.</small></main>
+}
+
 function App() {
   const [slide, setSlide] = useState(0)
   const next = () => setSlide((value) => Math.min(value + 1, 13))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) })
+  if (window.location.pathname.replace(/\/$/, '') === '/revisi-pcy') return <RevisiPcy />
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
     <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 14</span></header>
