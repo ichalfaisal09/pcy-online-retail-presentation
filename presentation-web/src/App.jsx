@@ -40,24 +40,25 @@ function DatasetSlide() {
 }
 
 const preprocessingSteps = [
-  ['Transaksi Batal', <>Hapus <em>InvoiceNo</em> berawalan <strong>“C”</strong> (<em>Cancel</em>).</>],
-  ['Item Non-Produk', <>Buang item biaya, diskon, sampel, dan komisi melalui <strong>blacklist</strong>.</>],
-  ['Validasi Baris', <>Hapus <em>Quantity</em> ≤ 0 serta <em>Description</em> kosong atau <em>NaN</em>.</>],
-  ['Grouping Data', <>Kelompokkan <em>Description</em> berdasarkan <em>InvoiceNo</em> menjadi <em>basket</em>.</>],
+  ['Load Data Mentah', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong>, <strong>StockCode</strong>, <strong>Description</strong>, dan <strong>Quantity</strong>.</>],
+  ['Filter Kelayakan', <>Buang <em>InvoiceNo</em> awal “C”, <em>Quantity</em> ≤ 0, dan <em>Description</em> kosong/<em>NaN</em>; rapikan spasi.</>],
+  ['Item Non-Produk', <>Buang entri akuntansi atau administratif yang bukan produk fisik melalui <strong>blacklist</strong>.</>],
+  ['Deduplication', <>Dalam satu <em>InvoiceNo</em>, produk yang sama hanya dicatat satu kali.</>],
+  ['Basket Pruning', <>Buang keranjang yang hanya berisi satu jenis produk.</>],
 ]
 
 function PreprocessingSlide() {
   return <section className="preprocess-slide" aria-labelledby="preprocess-title">
     <div className="section-heading"><p>03 — PERSIAPAN DATA</p><h2 id="preprocess-title">Data <span>Preprocessing</span></h2></div>
     <div className="process-line">{preprocessingSteps.map(([title, text], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
-    <div className="preprocess-detail"><p><strong>Blacklist item non-produk:</strong> POSTAGE · DOTCOM POSTAGE · BANK CHARGES · MANUAL · AMAZON FEE · DISCOUNT · SAMPLES · CRUK COMMISSION</p><div className="basket-code"><b aria-hidden="true">⌑</b><code>Invoice 536365 = &#123; Produk A, Produk B, Produk C &#125;</code></div></div>
+    <div className="preprocess-detail"><p><strong>Blacklist item non-produk:</strong> POSTAGE · DOTCOM POSTAGE · BANK CHARGES · MANUAL · AMAZON FEE · DISCOUNT · SAMPLES · CRUK COMMISSION</p><div className="basket-code"><b aria-hidden="true">⌑</b><code>Invoice 536365 = &#123; Produk A, Produk B, Produk C &#125; · item unik</code></div></div>
   </section>
 }
 
 function PreprocessingResultSlide() {
   return <section className="preprocessing-result-slide" aria-labelledby="preprocessing-result-title">
     <div className="section-heading"><p>04 — HASIL PREPROCESSING</p><h2 id="preprocessing-result-title">Dari Data Mentah ke <span>Basket Bersih</span></h2></div>
-    <div className="data-flow"><article><span>DATA AWAL</span><strong>541.909</strong><p>baris data mentah yang dibaca</p></article><div className="flow-arrow" aria-hidden="true">→<small>preprocessing</small></div><article><span>DATA BERSIH</span><strong>517.721</strong><p>baris data sebelum masuk keranjang</p></article><div className="flow-arrow" aria-hidden="true">→<small>grouping</small></div><article className="basket-total"><span>OUTPUT PCY</span><strong>18.294</strong><p>keranjang belanja bersih</p></article></div>
+    <div className="data-flow"><article><span>DATA AWAL</span><strong>541.909</strong><p>baris data mentah yang dibaca</p></article><div className="flow-arrow" aria-hidden="true">→<small>preprocessing</small></div><article><span>DATA BERSIH</span><strong>517.721</strong><p>baris data sebelum masuk keranjang</p></article><div className="flow-arrow" aria-hidden="true">→<small>grouping</small></div><article className="basket-total"><span>OUTPUT PCY</span><strong>18.294</strong><p>keranjang belanja bersih setelah pruning</p></article></div>
     <aside className="cleaning-insight"><b>24.188 baris (4,46%)</b><p>tereliminasi melalui transaksi batal, item non-produk, kuantitas tidak valid, dan data produk kosong.</p></aside>
   </section>
 }
