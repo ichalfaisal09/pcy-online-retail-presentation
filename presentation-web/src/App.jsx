@@ -40,17 +40,17 @@ function DatasetSlide() {
 }
 
 const preprocessingSteps = [
-  ['Load Data Mentah', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong>, <strong>StockCode</strong>, <strong>Description</strong>, dan <strong>Quantity</strong>.</>],
-  ['Filter Kelayakan', <>Buang <em>InvoiceNo</em> awal “C”, <em>Quantity</em> ≤ 0, dan <em>Description</em> kosong/<em>NaN</em>; rapikan spasi.</>],
-  ['Item Non-Produk', <>Buang entri akuntansi atau administratif yang bukan produk fisik melalui <strong>blacklist</strong>.</>],
-  ['Deduplication', <>Dalam satu <em>InvoiceNo</em>, produk yang sama hanya dicatat satu kali.</>],
-  ['Basket Pruning', <>Buang keranjang yang hanya berisi satu jenis produk.</>],
+  ['Load Data Mentah', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong>, <strong>StockCode</strong>, <strong>Description</strong>, dan <strong>Quantity</strong>.</>, '541.909', 'baris awal'],
+  ['Filter Kelayakan', <>Buang <em>InvoiceNo</em> awal “C”, <em>Quantity</em> ≤ 0, dan <em>Description</em> kosong/<em>NaN</em>; rapikan spasi.</>, '3 aturan', 'validasi utama'],
+  ['Item Non-Produk', <>Buang entri akuntansi atau administratif yang bukan produk fisik melalui <strong>blacklist</strong>.</>, '517.721', 'baris bersih'],
+  ['Deduplication', <>Dalam satu <em>InvoiceNo</em>, produk yang sama hanya dicatat satu kali.</>, 'item unik', 'per InvoiceNo'],
+  ['Basket Pruning', <>Buang keranjang yang hanya berisi satu jenis produk.</>, '18.294', 'basket akhir'],
 ]
 
 function PreprocessingSlide() {
   return <section className="preprocess-slide" aria-labelledby="preprocess-title">
     <div className="section-heading"><p>03 — PERSIAPAN DATA</p><h2 id="preprocess-title">Data <span>Preprocessing</span></h2></div>
-    <div className="process-line">{preprocessingSteps.map(([title, text], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
+    <div className="process-line">{preprocessingSteps.map(([title, text, value, label], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p><small className="step-metric"><b>{value}</b>{label}</small></article>)}</div>
   </section>
 }
 
