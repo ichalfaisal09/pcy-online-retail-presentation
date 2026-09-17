@@ -147,10 +147,10 @@ function ThanksSlide() {
   return <section className="thanks-slide" aria-labelledby="thanks-title"><p>ANALISIS BIG DATA · FAISAL</p><h2 id="thanks-title">Terima <span>Kasih</span></h2><div className="thanks-line" aria-hidden="true"><i /><i /><i /></div><small>Penerapan Algoritma PCY untuk Frequent Itemset Mining</small></section>
 }
 
-function TitleSlide({ isRevision = false }) {
+function TitleSlide() {
   return <section className="title-slide" aria-labelledby="presentation-title">
-    <p className="kicker">{isRevision ? 'PRESENTASI REVISI' : 'PRESENTASI PROYEK'}</p>
-    <h1 id="presentation-title">{isRevision ? <>Revisi Penerapan<br />Algoritma <span>PCY</span><br />untuk Frequent Itemset Mining</> : <>Penerapan Algoritma <span>PCY</span><br />untuk Frequent Itemset Mining</>}</h1>
+    <p className="kicker">PRESENTASI PROYEK</p>
+    <h1 id="presentation-title">Penerapan Algoritma <span>PCY</span><br />untuk Frequent Itemset Mining</h1>
     <p className="subtitle">Analisis produk yang sering dibeli bersama pada dataset Online Retail</p>
     <dl className="identity">{details.map(([label, value]) => <div className="identity-row" key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
   </section>
@@ -158,14 +158,15 @@ function TitleSlide({ isRevision = false }) {
 
 function App() {
   const [slide, setSlide] = useState(0)
+  const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
   const next = () => setSlide((value) => Math.min(value + 1, 13))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) })
-  const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
+  useEffect(() => { document.title = isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isRevisionRoute])
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
-    <header className="slide-header"><span className="eyebrow">{isRevisionRoute ? 'ANALISIS BIG DATA · REVISI' : 'ANALISIS BIG DATA'}</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 14</span></header>
-    {slide === 0 ? <TitleSlide isRevision={isRevisionRoute} /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide /> : slide === 4 ? <MiningConceptSlide /> : slide === 5 ? <ProblemSlide /> : slide === 6 ? <WorkflowSlide /> : slide === 7 ? <ResultsSlide /> : slide === 8 ? <PerformanceDetailSlide /> : slide === 9 ? <EvaluationSlide /> : slide === 10 ? <AssociationRulesSlide /> : slide === 11 ? <ProductInsightSlide /> : slide === 12 ? <ConclusionSlide /> : <ThanksSlide />}
+    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 14</span></header>
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide /> : slide === 4 ? <MiningConceptSlide /> : slide === 5 ? <ProblemSlide /> : slide === 6 ? <WorkflowSlide /> : slide === 7 ? <ResultsSlide /> : slide === 8 ? <PerformanceDetailSlide /> : slide === 9 ? <EvaluationSlide /> : slide === 10 ? <AssociationRulesSlide /> : slide === 11 ? <ProductInsightSlide /> : slide === 12 ? <ConclusionSlide /> : <ThanksSlide />}
     <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 13} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
 }
