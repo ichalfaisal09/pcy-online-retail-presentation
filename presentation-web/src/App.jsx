@@ -51,7 +51,6 @@ function PreprocessingSlide() {
   return <section className="preprocess-slide" aria-labelledby="preprocess-title">
     <div className="section-heading"><p>03 — PERSIAPAN DATA</p><h2 id="preprocess-title">Data <span>Preprocessing</span></h2></div>
     <div className="process-line">{preprocessingSteps.map(([title, text], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
-    <div className="preprocess-detail"><p><strong>Blacklist item non-produk:</strong> POSTAGE · DOTCOM POSTAGE · BANK CHARGES · MANUAL · AMAZON FEE · DISCOUNT · SAMPLES · CRUK COMMISSION</p><div className="basket-code"><b aria-hidden="true">⌑</b><code>Invoice 536365 = &#123; Produk A, Produk B, Produk C &#125; · item unik</code></div></div>
   </section>
 }
 
