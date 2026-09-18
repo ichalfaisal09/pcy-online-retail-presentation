@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PreprocessingDataModal from './PreprocessingDataModal'
 import './App.css'
 
 const details = [['Nama', 'Faisal'], ['NIM', 'D082261012'], ['Mata Kuliah', 'Analisis Big Data'], ['Dosen Pengampu', 'Mukarramah Yusuf, B.Sc., M.Sc., Ph.D.']]
@@ -46,10 +47,11 @@ const preprocessingSteps = [
   ['Deduplication & Pruning', <>Simpan item unik per <em>InvoiceNo</em>, kelompokkan menjadi basket, lalu buang basket tunggal.</>],
 ]
 
-function PreprocessingSlide() {
+function PreprocessingSlide({ onOpenData }) {
+  const stages = ['raw', 'eligible', 'products', 'baskets']
   return <section className="preprocess-slide" aria-labelledby="preprocess-title">
     <div className="section-heading"><p>03 — PERSIAPAN DATA</p><h2 id="preprocess-title">Data <span>Preprocessing</span></h2></div>
-    <div className="process-line">{preprocessingSteps.map(([title, text], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
+    <div className="process-line">{preprocessingSteps.map(([title, text], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p><button type="button" className="view-data-button" onClick={() => onOpenData(stages[index])}>Lihat data asli</button></article>)}</div>
   </section>
 }
 
@@ -174,15 +176,17 @@ function TitleSlide() {
 
 function App() {
   const [slide, setSlide] = useState(0)
+  const [activeDataStage, setActiveDataStage] = useState(null)
   const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
   const next = () => setSlide((value) => Math.min(value + 1, 14))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
-  useEffect(() => { const handleKey = (event) => { if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) })
+  useEffect(() => { const handleKey = (event) => { if (activeDataStage) return; if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage])
   useEffect(() => { document.title = isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isRevisionRoute])
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
     <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 15</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <ResultsSlide /> : slide === 9 ? <PerformanceDetailSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <ResultsSlide /> : slide === 9 ? <PerformanceDetailSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
+    {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
     <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 14} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
 }
