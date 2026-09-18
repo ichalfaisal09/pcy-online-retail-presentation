@@ -66,6 +66,7 @@ function PreprocessingResultSlide() {
       <article className="cleaning-panel"><p className="panel-label">01 · PEMBERSIHAN BARIS DATA</p><div className="cleaning-table"><div className="cleaning-head"><span>TAHAP</span><span>DIHAPUS</span><span>SISA BARIS</span></div>{cleaningRows.map(([stage, description, removed, remaining]) => <div className="cleaning-row" key={stage}><strong>{stage}<small>{description}</small></strong><b>{removed}</b><em>{remaining}</em></div>)}</div><p className="panel-total"><b>517.721</b> baris data bersih</p></article>
       <article className="basket-panel"><p className="panel-label">02 · PEMBENTUKAN BASKET</p><div className="basket-flow"><div><b>517.721</b><span>baris bersih</span></div><i>↓<small>grouping InvoiceNo</small></i><div><b>19.961</b><span>basket terbentuk</span></div><i className="prune-arrow">↓<small>−1.667 basket tunggal</small></i><div className="final-basket"><b>18.294</b><span>basket siap PCY</span></div></div></article>
     </div>
+    <aside className="preprocessing-footnote"><strong>Metadata dataset bersih:</strong> 4.059 jenis produk menghasilkan hingga 8.235.711 pasangan kandidat [n(n−1)/2]. Karena itu PCY menggunakan bitmap untuk menyaring kandidat dan menjaga penggunaan RAM tetap efisien.</aside>
   </section>
 }
 
