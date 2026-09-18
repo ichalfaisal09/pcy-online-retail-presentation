@@ -54,18 +54,18 @@ function PreprocessingSlide() {
 }
 
 function PreprocessingResultSlide() {
-  const rows = [
-    ['Data mentah', '—', '541.909', 'baris'],
-    ['Filter kelayakan', '−11.216', '530.693', 'baris'],
-    ['Item non-produk', '−2.178', '528.515', 'baris'],
-    ['Deduplication', '−10.794', '517.721', 'baris'],
-    ['Grouping InvoiceNo', '—', '19.961', 'basket'],
-    ['Basket pruning', '−1.667', '18.294', 'basket'],
+  const cleaningRows = [
+    ['Data mentah', '—', '541.909'],
+    ['Filter kelayakan', '−11.216', '530.693'],
+    ['Item non-produk', '−2.178', '528.515'],
+    ['Deduplication', '−10.794', '517.721'],
   ]
   return <section className="preprocessing-result-slide" aria-labelledby="preprocessing-result-title">
-    <div className="section-heading"><p>04 — DAMPAK PREPROCESSING</p><h2 id="preprocessing-result-title">Perubahan Data dari Mentah ke <span>Basket Bersih</span></h2></div>
-    <div className="preprocess-table" role="table" aria-label="Dampak tiap tahap preprocessing"><div className="preprocess-table-head" role="row"><span>TAHAP</span><span>DIHAPUS</span><span>DATA TERSISA</span><span>SATUAN</span></div>{rows.map(([stage, removed, remaining, unit], index) => <div className={`preprocess-table-row ${index === rows.length - 1 ? 'final-row' : ''}`} role="row" key={stage}><strong>{stage}</strong><b>{removed}</b><em>{remaining}</em><small>{unit}</small></div>)}</div>
-    <aside className="cleaning-insight"><b>18.294 basket siap PCY</b><p>Hasil akhir diperoleh setelah 24.188 baris dieliminasi, kemudian 1.667 basket tunggal dibuang.</p></aside>
+    <div className="section-heading"><p>04 — DAMPAK PREPROCESSING</p><h2 id="preprocessing-result-title">Dari Baris Data ke <span>Basket Bersih</span></h2></div>
+    <div className="preprocess-split">
+      <article className="cleaning-panel"><p className="panel-label">01 · PEMBERSIHAN BARIS DATA</p><div className="cleaning-table"><div className="cleaning-head"><span>TAHAP</span><span>DIHAPUS</span><span>SISA BARIS</span></div>{cleaningRows.map(([stage, removed, remaining]) => <div className="cleaning-row" key={stage}><strong>{stage}</strong><b>{removed}</b><em>{remaining}</em></div>)}</div><p className="panel-total"><b>517.721</b> baris data bersih</p></article>
+      <article className="basket-panel"><p className="panel-label">02 · PEMBENTUKAN BASKET</p><div className="basket-flow"><div><b>517.721</b><span>baris bersih</span></div><i>↓<small>grouping InvoiceNo</small></i><div><b>19.961</b><span>basket terbentuk</span></div><i className="prune-arrow">↓<small>−1.667 basket tunggal</small></i><div className="final-basket"><b>18.294</b><span>basket siap PCY</span></div></div></article>
+    </div>
   </section>
 }
 
