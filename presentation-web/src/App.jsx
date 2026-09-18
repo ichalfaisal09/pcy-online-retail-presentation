@@ -41,10 +41,10 @@ function DatasetSlide() {
 
 const preprocessingSteps = [
   ['Load Data Mentah', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong>, <strong>StockCode</strong>, <strong>Description</strong>, dan <strong>Quantity</strong>.</>, '541.909', 'baris awal'],
-  ['Filter Kelayakan', <>Buang <em>InvoiceNo</em> awal “C”, <em>Quantity</em> ≤ 0, dan <em>Description</em> kosong/<em>NaN</em>; rapikan spasi.</>, '3 aturan', 'validasi utama'],
-  ['Item Non-Produk', <>Buang entri akuntansi atau administratif yang bukan produk fisik melalui <strong>blacklist</strong>.</>, '517.721', 'baris bersih'],
-  ['Deduplication', <>Dalam satu <em>InvoiceNo</em>, produk yang sama hanya dicatat satu kali.</>, 'item unik', 'per InvoiceNo'],
-  ['Basket Pruning', <>Buang keranjang yang hanya berisi satu jenis produk.</>, '18.294', 'basket akhir'],
+  ['Filter Kelayakan', <>Buang <em>InvoiceNo</em> awal “C”, <em>Quantity</em> ≤ 0, dan <em>Description</em> kosong/<em>NaN</em>; rapikan spasi.</>, '−11.216', 'baris dibuang'],
+  ['Item Non-Produk', <>Buang entri akuntansi atau administratif yang bukan produk fisik melalui <strong>blacklist</strong>.</>, '−2.178', 'baris dibuang'],
+  ['Deduplication', <>Dalam satu <em>InvoiceNo</em>, produk yang sama hanya dicatat satu kali.</>, '−10.794', 'duplikasi dibuang'],
+  ['Basket Pruning', <>Buang <strong>1.667</strong> keranjang yang hanya berisi satu jenis produk.</>, '18.294', 'basket akhir'],
 ]
 
 function PreprocessingSlide() {
