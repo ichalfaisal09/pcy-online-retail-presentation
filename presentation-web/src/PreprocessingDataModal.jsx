@@ -3,6 +3,12 @@ import { useEffect, useState } from 'react'
 const basePath = '/data/preprocessing/'
 const pageSize = 50
 const number = new Intl.NumberFormat('id-ID')
+const calculations = {
+  raw: 'Data mentah dibaca dari file Online Retail.xlsx',
+  eligible: '541.909 data mentah − 11.216 data tidak layak = 530.693',
+  products: '530.693 baris layak − 2.178 item non-produk = 528.515',
+  baskets: '19.961 basket terbentuk − 1.667 basket tunggal = 18.294',
+}
 let cache = null
 
 async function getMetadata() {
@@ -87,5 +93,5 @@ export default function PreprocessingDataModal({ stage, onClose }) {
   if (!metadata) return <div className="data-modal-backdrop"><div className="data-modal"><p className="data-modal-status">Memuat struktur data…</p></div></div>
   const config = metadata.stages[stage]
   const totalPages = Math.ceil(config.rows / pageSize)
-  return <div className="data-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose() }}><section className="data-modal" role="dialog" aria-modal="true" aria-labelledby="data-modal-title"><header><div><span>DATA ASLI · PREPROCESSING</span><h3 id="data-modal-title">{config.label}</h3><p className={stage === 'products' ? 'modal-important-total' : ''}><b>{number.format(config.rows)}</b> {stage === 'baskets' ? 'basket' : 'baris data'} · menampilkan {number.format(page * pageSize + 1)}–{number.format(Math.min((page + 1) * pageSize, config.rows))}</p></div><button type="button" onClick={onClose} aria-label="Tutup tabel data">×</button></header><DataTable stage={stage} metadata={metadata} page={page} /><footer><button type="button" disabled={page === 0} onClick={() => setPage((value) => value - 1)}>← Sebelumnya</button><span>Halaman {number.format(page + 1)} / {number.format(totalPages)}</span><button type="button" disabled={page >= totalPages - 1} onClick={() => setPage((value) => value + 1)}>Berikutnya →</button></footer></section></div>
+  return <div className="data-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose() }}><section className="data-modal" role="dialog" aria-modal="true" aria-labelledby="data-modal-title"><header><div><span>DATA ASLI · PREPROCESSING</span><h3 id="data-modal-title">{config.label}</h3><p className={stage === 'products' ? 'modal-important-total' : ''}><b>{number.format(config.rows)}</b> {stage === 'baskets' ? 'basket' : 'baris data'} · menampilkan {number.format(page * pageSize + 1)}–{number.format(Math.min((page + 1) * pageSize, config.rows))}</p><p className="modal-calculation">{calculations[stage]}</p></div><button type="button" onClick={onClose} aria-label="Tutup tabel data">×</button></header><DataTable stage={stage} metadata={metadata} page={page} /><footer><button type="button" disabled={page === 0} onClick={() => setPage((value) => value - 1)}>← Sebelumnya</button><span>Halaman {number.format(page + 1)} / {number.format(totalPages)}</span><button type="button" disabled={page >= totalPages - 1} onClick={() => setPage((value) => value + 1)}>Berikutnya →</button></footer></section></div>
 }
