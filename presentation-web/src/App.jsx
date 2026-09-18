@@ -41,7 +41,7 @@ function DatasetSlide() {
 }
 
 const preprocessingSteps = [
-  ['Load & Pilih Kolom', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong>, <strong>StockCode</strong>, <strong>Description</strong>, dan <strong>Quantity</strong>.</>],
+  ['Load & Pilih Kolom', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong> sebagai ID transaksi dan <strong>Description</strong> sebagai representasi produk.</>],
   ['Filter Kelayakan', <>Buang transaksi batal, <em>Quantity</em> ≤ 0, serta <em>Description</em> kosong atau <em>NaN</em>.</>],
   ['Item Non-Produk', <><strong>Blacklist</strong> adalah daftar nama item yang dikecualikan, misalnya <em>POSTAGE</em>, <em>BANK CHARGES</em>, dan <em>DISCOUNT</em>, karena bukan produk fisik.</>],
   ['Deduplication & Pruning', <>Simpan item unik per <em>InvoiceNo</em>, kelompokkan menjadi basket, lalu buang basket tunggal.</>],
