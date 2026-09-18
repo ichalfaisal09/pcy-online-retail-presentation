@@ -67,7 +67,7 @@ function DataTable({ stage, metadata, page }) {
   if (error) return <p className="data-modal-status error">{error}</p>
   if (!rows) return <p className="data-modal-status">Memuat data asli…</p>
   if (stage === 'baskets') return <div className="modal-table-wrap"><table><thead><tr><th>InvoiceNo</th><th>Jumlah item unik</th><th>Isi basket</th></tr></thead><tbody>{rows.map((row) => <tr key={row.invoice}><td>{row.invoice}</td><td>{row.count}</td><td>{row.items}</td></tr>)}</tbody></table></div>
-  return <div className="modal-table-wrap"><table><thead><tr><th>InvoiceNo</th><th>StockCode</th><th>Description</th><th>Quantity</th></tr></thead><tbody>{rows.map((row, index) => <tr key={`${row.invoice}-${row.stockCode}-${index}`}><td>{row.invoice}</td><td>{row.stockCode}</td><td>{row.description}</td><td>{number.format(row.quantity)}</td></tr>)}</tbody></table></div>
+  return <div className="modal-table-wrap"><table><thead><tr><th>InvoiceNo</th><th>Description</th></tr></thead><tbody>{rows.map((row, index) => <tr key={`${row.invoice}-${row.stockCode}-${index}`}><td>{row.invoice}</td><td>{row.description}</td></tr>)}</tbody></table></div>
 }
 
 export default function PreprocessingDataModal({ stage, onClose }) {
