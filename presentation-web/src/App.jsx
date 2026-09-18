@@ -40,26 +40,32 @@ function DatasetSlide() {
 }
 
 const preprocessingSteps = [
-  ['Load Data Mentah', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong>, <strong>StockCode</strong>, <strong>Description</strong>, dan <strong>Quantity</strong>.</>, '541.909', 'baris awal'],
-  ['Filter Kelayakan', <>Buang <em>InvoiceNo</em> awal “C”, <em>Quantity</em> ≤ 0, dan <em>Description</em> kosong/<em>NaN</em>; rapikan spasi.</>, '−11.216', 'baris dibuang'],
-  ['Item Non-Produk', <>Buang entri akuntansi atau administratif yang bukan produk fisik melalui <strong>blacklist</strong>.</>, '−2.178', 'baris dibuang'],
-  ['Deduplication', <>Dalam satu <em>InvoiceNo</em>, produk yang sama hanya dicatat satu kali.</>, '−10.794', 'duplikasi dibuang'],
-  ['Grouping & Basket Pruning', <>Kelompokkan <em>Description</em> berdasarkan <em>InvoiceNo</em>, lalu buang <strong>1.667</strong> basket tunggal.</>, '−1.667', 'basket tunggal'],
-  ['Hasil Akhir', <>Keranjang bersih dengan minimal dua jenis produk, siap untuk analisis <strong>PCY</strong>.</>, '18.294', 'basket siap PCY'],
+  ['Load & Pilih Kolom', <>Baca <em>Online Retail.xlsx</em>; gunakan <strong>InvoiceNo</strong>, <strong>StockCode</strong>, <strong>Description</strong>, dan <strong>Quantity</strong>.</>],
+  ['Filter Kelayakan', <>Buang transaksi batal, <em>Quantity</em> ≤ 0, serta <em>Description</em> kosong atau <em>NaN</em>.</>],
+  ['Item Non-Produk', <>Buang entri administratif dan akuntansi yang bukan produk fisik melalui <strong>blacklist</strong>.</>],
+  ['Deduplication & Pruning', <>Simpan item unik per <em>InvoiceNo</em>, kelompokkan menjadi basket, lalu buang basket tunggal.</>],
 ]
 
 function PreprocessingSlide() {
   return <section className="preprocess-slide" aria-labelledby="preprocess-title">
     <div className="section-heading"><p>03 — PERSIAPAN DATA</p><h2 id="preprocess-title">Data <span>Preprocessing</span></h2></div>
-    <div className="process-line">{preprocessingSteps.map(([title, text, value, label], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p><small className="step-metric"><b>{value}</b>{label}</small></article>)}</div>
+    <div className="process-line">{preprocessingSteps.map(([title, text], index) => <article className="process-step" key={title}><span>{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
   </section>
 }
 
 function PreprocessingResultSlide() {
+  const rows = [
+    ['Data mentah', '—', '541.909', 'baris'],
+    ['Filter kelayakan', '−11.216', '530.693', 'baris'],
+    ['Item non-produk', '−2.178', '528.515', 'baris'],
+    ['Deduplication', '−10.794', '517.721', 'baris'],
+    ['Grouping InvoiceNo', '—', '19.961', 'basket'],
+    ['Basket pruning', '−1.667', '18.294', 'basket'],
+  ]
   return <section className="preprocessing-result-slide" aria-labelledby="preprocessing-result-title">
-    <div className="section-heading"><p>04 — HASIL PREPROCESSING</p><h2 id="preprocessing-result-title">Dari Data Mentah ke <span>Basket Bersih</span></h2></div>
-    <div className="data-flow"><article><span>DATA AWAL</span><strong>541.909</strong><p>baris data mentah yang dibaca</p></article><div className="flow-arrow" aria-hidden="true">→<small>preprocessing</small></div><article><span>DATA BERSIH</span><strong>517.721</strong><p>baris data sebelum masuk keranjang</p></article><div className="flow-arrow" aria-hidden="true">→<small>grouping</small></div><article className="basket-total"><span>OUTPUT PCY</span><strong>18.294</strong><p>keranjang belanja bersih setelah pruning</p></article></div>
-    <aside className="cleaning-insight"><b>24.188 baris (4,46%)</b><p>tereliminasi melalui transaksi batal, item non-produk, kuantitas tidak valid, dan data produk kosong.</p></aside>
+    <div className="section-heading"><p>04 — DAMPAK PREPROCESSING</p><h2 id="preprocessing-result-title">Perubahan Data dari Mentah ke <span>Basket Bersih</span></h2></div>
+    <div className="preprocess-table" role="table" aria-label="Dampak tiap tahap preprocessing"><div className="preprocess-table-head" role="row"><span>TAHAP</span><span>DIHAPUS</span><span>DATA TERSISA</span><span>SATUAN</span></div>{rows.map(([stage, removed, remaining, unit], index) => <div className={`preprocess-table-row ${index === rows.length - 1 ? 'final-row' : ''}`} role="row" key={stage}><strong>{stage}</strong><b>{removed}</b><em>{remaining}</em><small>{unit}</small></div>)}</div>
+    <aside className="cleaning-insight"><b>18.294 basket siap PCY</b><p>Hasil akhir diperoleh setelah 24.188 baris dieliminasi, kemudian 1.667 basket tunggal dibuang.</p></aside>
   </section>
 }
 
