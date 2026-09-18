@@ -44,7 +44,8 @@ const preprocessingSteps = [
   ['Filter Kelayakan', <>Buang <em>InvoiceNo</em> awal “C”, <em>Quantity</em> ≤ 0, dan <em>Description</em> kosong/<em>NaN</em>; rapikan spasi.</>, '−11.216', 'baris dibuang'],
   ['Item Non-Produk', <>Buang entri akuntansi atau administratif yang bukan produk fisik melalui <strong>blacklist</strong>.</>, '−2.178', 'baris dibuang'],
   ['Deduplication', <>Dalam satu <em>InvoiceNo</em>, produk yang sama hanya dicatat satu kali.</>, '−10.794', 'duplikasi dibuang'],
-  ['Basket Pruning', <>Buang <strong>1.667</strong> keranjang yang hanya berisi satu jenis produk.</>, '18.294', 'basket akhir'],
+  ['Grouping & Basket Pruning', <>Kelompokkan <em>Description</em> berdasarkan <em>InvoiceNo</em>, lalu buang <strong>1.667</strong> basket tunggal.</>, '−1.667', 'basket tunggal'],
+  ['Hasil Akhir', <>Keranjang bersih dengan minimal dua jenis produk, siap untuk analisis <strong>PCY</strong>.</>, '18.294', 'basket siap PCY'],
 ]
 
 function PreprocessingSlide() {
