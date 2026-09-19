@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import PreprocessingDataModal from './PreprocessingDataModal'
+import BrowserPCYSlide from './BrowserPCYSlide'
 import './App.css'
 
 const details = [['Nama', 'Faisal'], ['NIM', 'D082261012'], ['Mata Kuliah', 'Analisis Big Data'], ['Dosen Pengampu', 'Mukarramah Yusuf, B.Sc., M.Sc., Ph.D.']]
@@ -118,8 +119,7 @@ function WorkflowSlide() {
 }
 
 const totalBaskets = 18294
-function ResultsSlide() {
-  const [support, setSupport] = useState(1)
+function ResultsSlide({ support, setSupport }) {
   const numericSupport = Number.isFinite(Number(support)) ? Math.min(100, Math.max(0, Number(support))) : 0
   const threshold = Math.floor((numericSupport / 100) * totalBaskets)
   const pendingMetrics = [['—', 'Frequent Item', 'blue'], ['—', 'Kandidat Pair', 'blue'], ['—', 'Frequent Pairs', 'mint'], ['—', 'Runtime', 'blue'], ['—', 'Peak RAM', 'mint'], ['2', 'Total Scan Data (Pass)', 'mint']]
@@ -176,17 +176,18 @@ function TitleSlide() {
 function App() {
   const [slide, setSlide] = useState(0)
   const [activeDataStage, setActiveDataStage] = useState(null)
+  const [minimumSupport, setMinimumSupport] = useState(1)
   const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
-  const next = () => setSlide((value) => Math.min(value + 1, 14))
+  const next = () => setSlide((value) => Math.min(value + 1, 15))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage])
   useEffect(() => { document.title = isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isRevisionRoute])
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
-    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 15</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <ResultsSlide /> : slide === 9 ? <PerformanceDetailSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
+    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 16</span></header>
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <ResultsSlide support={minimumSupport} setSupport={setMinimumSupport} /> : slide === 9 ? <BrowserPCYSlide support={minimumSupport} /> : slide === 10 ? <PerformanceDetailSlide /> : slide === 11 ? <EvaluationSlide /> : slide === 12 ? <AssociationRulesSlide /> : slide === 13 ? <ProductInsightSlide /> : slide === 14 ? <ConclusionSlide /> : <ThanksSlide />}
     {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
-    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 14} aria-label="Slide berikutnya">→</button></div></footer>
+    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 15} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
 }
 
