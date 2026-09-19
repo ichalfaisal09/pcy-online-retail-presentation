@@ -2,13 +2,13 @@ import { useState } from 'react'
 
 const number = new Intl.NumberFormat('id-ID')
 
-export default function BrowserPCYSlide({ support, setSupport }) {
+export default function BrowserPCYSlide({ support, setSupport, onResult }) {
   const [result, setResult] = useState(null)
   const [running, setRunning] = useState(false)
   const run = () => {
     setRunning(true); setResult(null)
     const worker = new Worker(new URL('./pcyWorker.js', import.meta.url), { type: 'module' })
-    worker.onmessage = ({ data }) => { setRunning(false); setResult(data); worker.terminate() }
+    worker.onmessage = ({ data }) => { setRunning(false); setResult(data); if (data.ok) onResult(data); worker.terminate() }
     worker.postMessage({ support: Number(support) || 0 })
   }
   const threshold = Math.floor(((Number(support) || 0) / 100) * 18294)

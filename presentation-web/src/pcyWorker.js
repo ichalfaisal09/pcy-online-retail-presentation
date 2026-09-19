@@ -4,8 +4,8 @@ const hashPair = (left, right) => ((left * 1009 + right) % bucketCount)
 self.onmessage = async ({ data: { support } }) => {
   try {
     const started = performance.now()
-    const response = await fetch('/data/preprocessing/final-baskets.json')
-    const source = await response.json()
+    const [response, metaResponse] = await Promise.all([fetch('/data/preprocessing/final-baskets.json'), fetch('/data/preprocessing/metadata.json')])
+    const [source, metadata] = await Promise.all([response.json(), metaResponse.json()])
     const baskets = source.map(([, items]) => items)
     const threshold = Math.floor((support / 100) * baskets.length)
     const itemCounts = new Map()
@@ -23,7 +23,8 @@ self.onmessage = async ({ data: { support } }) => {
         if (buckets[hashPair(first, second)] >= threshold) { const key = `${first}:${second}`; candidates.set(key, (candidates.get(key) || 0) + 1) }
       }
     }
-    const pairs = [...candidates.values()].filter((count) => count >= threshold).length
-    self.postMessage({ ok: true, support, threshold, baskets: baskets.length, frequentItems: frequent.size, candidates: candidates.size, frequentPairs: pairs, runtime: performance.now() - started })
+    const accepted = [...candidates.entries()].filter(([, count]) => count >= threshold)
+    const rules = accepted.flatMap(([key, count]) => { const [left, right] = key.split(':').map(Number); return [[left, right], [right, left]].map(([from, to]) => ({ from: metadata.descriptions[from], to: metadata.descriptions[to], support: count / baskets.length, confidence: count / itemCounts.get(from), interest: count / itemCounts.get(from) - itemCounts.get(to) / baskets.length })) }).sort((a,b) => b.interest-a.interest).slice(0,5)
+    self.postMessage({ ok: true, support, threshold, baskets: baskets.length, frequentItems: frequent.size, candidates: candidates.size, frequentPairs: accepted.length, runtime: performance.now() - started, rules })
   } catch { self.postMessage({ ok: false, error: 'Perhitungan browser gagal.' }) }
 }

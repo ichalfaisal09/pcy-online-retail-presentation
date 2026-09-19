@@ -118,11 +118,10 @@ function WorkflowSlide() {
   </section>
 }
 
-const trials = [27.88798, 27.954222, 26.606518, 28.602966, 28.25224, 27.962832, 27.20653, 28.209351, 26.812265, 27.421376]
-function PerformanceDetailSlide() {
-  return <section className="performance-slide" aria-labelledby="performance-title"><div className="section-heading"><p>09 — PENGUJIAN KINERJA</p><h2 id="performance-title">Rincian <span>10 Pengujian</span></h2></div><div className="performance-summary"><article><span>RATA-RATA RUNTIME</span><strong>27,69 s</strong></article><article><span>RATA-RATA PEAK MEMORY</span><strong>84,78 MB</strong></article></div><div className="trial-grid">{trials.map((runtime, index) => <article className="trial-row" key={index}><span>Percobaan {String(index + 1).padStart(2, '0')}</span><b>{runtime.toFixed(2).replace('.', ',')} s</b><i><em style={{ width: `${(runtime / 30) * 100}%` }} /></i><small>84,78 MB</small></article>)}</div><p className="performance-note">Semua pengujian menggunakan konfigurasi yang sama: 5.000 basket, minimum support 50, dan dua kali scan data.</p></section>
+function PerformanceDetailSlide({ result, support }) {
+  const value = result && result.support === Number(support) ? result : null
+  return <section className="performance-slide" aria-labelledby="performance-title"><div className="section-heading"><p>09 — HASIL RUN AKTIF</p><h2 id="performance-title">Hasil Eksekusi <span>PCY</span></h2></div>{value ? <><div className="performance-summary"><article><span>MINIMUM SUPPORT</span><strong>{value.support}%</strong></article><article><span>AMBANG TRANSAKSI</span><strong>{value.threshold.toLocaleString('id-ID')}</strong></article><article><span>RUNTIME BROWSER</span><strong>{(value.runtime / 1000).toFixed(2).replace('.', ',')} s</strong></article></div><div className="trial-grid"><article className="trial-row"><span>Frequent Item</span><b>{value.frequentItems.toLocaleString('id-ID')}</b></article><article className="trial-row"><span>Kandidat Pair</span><b>{value.candidates.toLocaleString('id-ID')}</b></article><article className="trial-row"><span>Frequent Pairs</span><b>{value.frequentPairs.toLocaleString('id-ID')}</b></article></div></> : <p className="support-note">Belum ada hasil run untuk support {support}%. Kembali ke slide 8, lalu jalankan PCY di browser.</p>}</section>
 }
-
 function EvaluationSlide() {
   return <section className="evaluation-slide" aria-labelledby="evaluation-title"><div className="section-heading"><p>10 — ANALISIS HASIL</p><h2 id="evaluation-title">Evaluasi Implementasi <span>PCY</span></h2></div><div className="evaluation-grid"><article className="evaluation-summary"><p className="eyebrow-label">RASIO FREQUENT PAIRS</p><strong>0,48%</strong><p>Dari <b>419.445</b> kandidat itemset, hanya <b>2.030 frequent pairs</b> yang memenuhi ambang minimum support.</p><div className="ratio-bar" aria-label="0,48 persen kandidat menjadi frequent pairs"><i /></div><small>Frequent pairs dibanding kandidat itemset</small></article><article className="evaluation-points"><h3>Temuan Utama</h3><ul><li><strong>937 item frequent</strong> menjadi dasar pembentukan pasangan kandidat.</li><li>PCY menyelesaikan benchmark <strong>5.000 basket</strong> dengan rata-rata peak memory <strong>84,78 MB</strong>.</li><li>Rata-rata runtime adalah <strong>27,69 detik</strong> dari <strong>10 kali pengujian</strong>, dengan dua kali scan dataset per pengujian.</li></ul></article></div><div className="business-insight"><span>INSIGHT BISNIS</span><p>Frequent pairs yang lolos dapat diprioritaskan untuk <strong>bundling produk</strong>, rekomendasi “sering dibeli bersama”, dan promosi silang yang lebih relevan.</p></div></section>
 }
@@ -170,6 +169,7 @@ function App() {
   const [slide, setSlide] = useState(0)
   const [activeDataStage, setActiveDataStage] = useState(null)
   const [minimumSupport, setMinimumSupport] = useState(1)
+  const [pcyResult, setPcyResult] = useState(null)
   const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
   const next = () => setSlide((value) => Math.min(value + 1, 14))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
@@ -178,7 +178,7 @@ function App() {
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
     <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 15</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <BrowserPCYSlide support={minimumSupport} setSupport={setMinimumSupport} /> : slide === 9 ? <PerformanceDetailSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <BrowserPCYSlide support={minimumSupport} setSupport={setMinimumSupport} onResult={setPcyResult} /> : slide === 9 ? <PerformanceDetailSlide result={pcyResult} support={minimumSupport} /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
     {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
     <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 14} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
