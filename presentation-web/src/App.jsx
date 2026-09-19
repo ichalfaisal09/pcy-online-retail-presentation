@@ -118,13 +118,6 @@ function WorkflowSlide() {
   </section>
 }
 
-const totalBaskets = 18294
-function ResultsSlide({ support, setSupport }) {
-  const numericSupport = Number.isFinite(Number(support)) ? Math.min(100, Math.max(0, Number(support))) : 0
-  const threshold = Math.floor((numericSupport / 100) * totalBaskets)
-  const pendingMetrics = [['—', 'Frequent Item', 'blue'], ['—', 'Kandidat Pair', 'blue'], ['—', 'Frequent Pairs', 'mint'], ['—', 'Runtime', 'blue'], ['—', 'Peak RAM', 'mint'], ['2', 'Total Scan Data (Pass)', 'mint']]
-  return <section className="results-slide support-explorer" aria-labelledby="results-title"><div className="section-heading"><p>08 — EKSPLORASI PARAMETER</p><h2 id="results-title">Eksplorasi <span>Minimum Support</span></h2></div><div className="support-control"><div><span>MINIMUM SUPPORT</span><label><input type="number" min="0" max="100" step="0.1" value={support} onChange={(event) => setSupport(event.target.value)} aria-label="Minimum support dalam persen" /> <b>%</b></label></div><p><strong>{numericSupport.toLocaleString('id-ID')}%</strong> × <strong>18.294 basket</strong> = <em>minimum {threshold.toLocaleString('id-ID')} transaksi</em></p></div><div className="metric-grid"><article className="metric-card blue"><strong>18.294</strong><span>Total Basket Bersih</span></article><article className="metric-card mint"><strong>{numericSupport.toLocaleString('id-ID')}%</strong><span>Minimum Support</span></article><article className="metric-card mint"><strong>{threshold.toLocaleString('id-ID')}</strong><span>Ambang Transaksi Minimum</span></article>{pendingMetrics.map(([value, label, tone]) => <article className={'metric-card ' + tone + ' pending-metric'} key={label}><strong>{value}</strong><span>{label}</span><small>belum diuji</small></article>)}</div><p className="support-note">Masukkan nilai support untuk menghitung ambang transaksi. Metrik hasil PCY akan diisi setelah eksperimen pada nilai support tersebut dijalankan.</p></section>
-}
 const trials = [27.88798, 27.954222, 26.606518, 28.602966, 28.25224, 27.962832, 27.20653, 28.209351, 26.812265, 27.421376]
 function PerformanceDetailSlide() {
   return <section className="performance-slide" aria-labelledby="performance-title"><div className="section-heading"><p>09 — PENGUJIAN KINERJA</p><h2 id="performance-title">Rincian <span>10 Pengujian</span></h2></div><div className="performance-summary"><article><span>RATA-RATA RUNTIME</span><strong>27,69 s</strong></article><article><span>RATA-RATA PEAK MEMORY</span><strong>84,78 MB</strong></article></div><div className="trial-grid">{trials.map((runtime, index) => <article className="trial-row" key={index}><span>Percobaan {String(index + 1).padStart(2, '0')}</span><b>{runtime.toFixed(2).replace('.', ',')} s</b><i><em style={{ width: `${(runtime / 30) * 100}%` }} /></i><small>84,78 MB</small></article>)}</div><p className="performance-note">Semua pengujian menggunakan konfigurasi yang sama: 5.000 basket, minimum support 50, dan dua kali scan data.</p></section>
@@ -178,16 +171,16 @@ function App() {
   const [activeDataStage, setActiveDataStage] = useState(null)
   const [minimumSupport, setMinimumSupport] = useState(1)
   const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
-  const next = () => setSlide((value) => Math.min(value + 1, 15))
+  const next = () => setSlide((value) => Math.min(value + 1, 14))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage])
   useEffect(() => { document.title = isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isRevisionRoute])
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
-    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 16</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <ResultsSlide support={minimumSupport} setSupport={setMinimumSupport} /> : slide === 9 ? <BrowserPCYSlide support={minimumSupport} setSupport={setMinimumSupport} /> : slide === 10 ? <PerformanceDetailSlide /> : slide === 11 ? <EvaluationSlide /> : slide === 12 ? <AssociationRulesSlide /> : slide === 13 ? <ProductInsightSlide /> : slide === 14 ? <ConclusionSlide /> : <ThanksSlide />}
+    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 15</span></header>
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <BrowserPCYSlide support={minimumSupport} setSupport={setMinimumSupport} /> : slide === 9 ? <PerformanceDetailSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
     {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
-    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 15} aria-label="Slide berikutnya">→</button></div></footer>
+    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 14} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
 }
 
