@@ -1,5 +1,5 @@
 const bucketCount = 100003
-const hashPair = (left, right) => { const pair = left < right ? left + '\u001f' + right : right + '\u001f' + left; let hash = 2166136261; for (let index = 0; index < pair.length; index += 1) { hash ^= pair.charCodeAt(index); hash = Math.imul(hash, 16777619) >>> 0 } return hash % bucketCount }
+const hashPair = (left, right) => { const pair = left < right ? left + '\u001f' + right : right + '\u001f' + left; let hash = 2166136261; for (const byte of new TextEncoder().encode(pair)) { hash ^= byte; hash = Math.imul(hash, 16777619) >>> 0 } return hash % bucketCount }
 
 self.onmessage = async ({ data: { support } }) => {
   try {
