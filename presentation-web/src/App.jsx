@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import PreprocessingDataModal from './PreprocessingDataModal'
-import BrowserPCYSlide from './BrowserPCYSlide'
+import { SensitivityParameterSlide, SensitivityResultSlide } from './SensitivitySlides'
 import './App.css'
 
 const details = [['Nama', 'Faisal'], ['NIM', 'D082261012'], ['Mata Kuliah', 'Analisis Big Data'], ['Dosen Pengampu', 'Mukarramah Yusuf, B.Sc., M.Sc., Ph.D.']]
@@ -118,10 +118,6 @@ function WorkflowSlide() {
   </section>
 }
 
-function PerformanceDetailSlide({ result, support }) {
-  const value = result && result.support === Number(support) ? result : null
-  return <section className="performance-slide" aria-labelledby="performance-title"><div className="section-heading"><p>09 — HASIL RUN AKTIF</p><h2 id="performance-title">Hasil Eksekusi <span>PCY</span></h2></div>{value ? <><div className="performance-summary"><article><span>MINIMUM SUPPORT</span><strong>{value.support}%</strong></article><article><span>AMBANG TRANSAKSI</span><strong>{value.threshold.toLocaleString('id-ID')}</strong></article><article><span>RUNTIME BROWSER</span><strong>{(value.runtime / 1000).toFixed(2).replace('.', ',')} s</strong></article></div><div className="trial-grid"><article className="trial-row"><span>Frequent Item</span><b>{value.frequentItems.toLocaleString('id-ID')}</b></article><article className="trial-row"><span>Kandidat Pair</span><b>{value.candidates.toLocaleString('id-ID')}</b></article><article className="trial-row"><span>Frequent Pairs</span><b>{value.frequentPairs.toLocaleString('id-ID')}</b></article></div></> : <p className="support-note">Belum ada hasil run untuk support {support}%. Kembali ke slide 8, lalu jalankan PCY di browser.</p>}</section>
-}
 function EvaluationSlide() {
   return <section className="evaluation-slide" aria-labelledby="evaluation-title"><div className="section-heading"><p>10 — ANALISIS HASIL</p><h2 id="evaluation-title">Evaluasi Implementasi <span>PCY</span></h2></div><div className="evaluation-grid"><article className="evaluation-summary"><p className="eyebrow-label">RASIO FREQUENT PAIRS</p><strong>0,48%</strong><p>Dari <b>419.445</b> kandidat itemset, hanya <b>2.030 frequent pairs</b> yang memenuhi ambang minimum support.</p><div className="ratio-bar" aria-label="0,48 persen kandidat menjadi frequent pairs"><i /></div><small>Frequent pairs dibanding kandidat itemset</small></article><article className="evaluation-points"><h3>Temuan Utama</h3><ul><li><strong>937 item frequent</strong> menjadi dasar pembentukan pasangan kandidat.</li><li>PCY menyelesaikan benchmark <strong>5.000 basket</strong> dengan rata-rata peak memory <strong>84,78 MB</strong>.</li><li>Rata-rata runtime adalah <strong>27,69 detik</strong> dari <strong>10 kali pengujian</strong>, dengan dua kali scan dataset per pengujian.</li></ul></article></div><div className="business-insight"><span>INSIGHT BISNIS</span><p>Frequent pairs yang lolos dapat diprioritaskan untuk <strong>bundling produk</strong>, rekomendasi “sering dibeli bersama”, dan promosi silang yang lebih relevan.</p></div></section>
 }
@@ -168,8 +164,6 @@ function TitleSlide() {
 function App() {
   const [slide, setSlide] = useState(0)
   const [activeDataStage, setActiveDataStage] = useState(null)
-  const [minimumSupport, setMinimumSupport] = useState(1)
-  const [pcyResult, setPcyResult] = useState(null)
   const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
   const next = () => setSlide((value) => Math.min(value + 1, 14))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
@@ -178,7 +172,7 @@ function App() {
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
     <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 15</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <BrowserPCYSlide support={minimumSupport} setSupport={setMinimumSupport} onResult={setPcyResult} /> : slide === 9 ? <PerformanceDetailSlide result={pcyResult} support={minimumSupport} /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <SensitivityParameterSlide /> : slide === 9 ? <SensitivityResultSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : <ThanksSlide />}
     {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
     <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 14} aria-label="Slide berikutnya">→</button></div></footer>
   </main>

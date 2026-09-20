@@ -1,0 +1,13 @@
+const experiments = [
+  { support: '1%', threshold: '182', items: '893', candidates: '375.747', pairs: '1.107', runtime: '163,04 s', ram: '59,47 MB' },
+  { support: '2%', threshold: '365', items: '348', candidates: '21.080', pairs: '109', runtime: '135,47 s', ram: '6,34 MB' },
+  { support: '3%', threshold: '548', items: '149', candidates: '815', pairs: '15', runtime: '130,93 s', ram: '3,83 MB' },
+  { support: '5%', threshold: '914', items: '43', candidates: '5', pairs: '0', runtime: '112,82 s', ram: '3,68 MB' },
+  { support: '10%', threshold: '1.829', items: '3', candidates: '0', pairs: '0', runtime: '133,59 s', ram: '3,68 MB' },
+]
+export function SensitivityParameterSlide() {
+  return <section className="browser-pcy-slide" aria-labelledby="support-title"><div className="section-heading"><p>08 — KONFIGURASI EKSPERIMEN</p><h2 id="support-title">Minimum Support <span>&amp; Ambang</span></h2></div><div className="threshold-formula"><span>RUMUS AMBANG SUPPORT</span><strong>floor(minimum support × total basket)</strong><p>Contoh: <b>3%</b> × <b>18.294 basket</b> = <em>548 transaksi minimum</em>.</p></div><p className="browser-pcy-intro">Ambang adalah jumlah minimum transaksi yang harus memuat item atau pasangan agar dinyatakan <strong>frequent</strong>. Semua percobaan memakai 18.294 basket, 100.003 bucket bitmap, dan 2 pass PCY.</p><div className="support-scenario-row">{experiments.map((item) => <article key={item.support}><b>{item.support}</b><span>ambang {item.threshold}</span></article>)}</div></section>
+}
+export function SensitivityResultSlide() {
+  return <section className="performance-slide sensitivity-results" aria-labelledby="sensitivity-title"><div className="section-heading"><p>09 — HASIL EKSPERIMEN PYTHON</p><h2 id="sensitivity-title">Dampak <span>Minimum Support</span></h2></div><div className="sensitivity-table"><div className="sensitivity-head"><span>SUPPORT</span><span>AMBANG</span><span>FREQ. ITEM</span><span>KANDIDAT</span><span>FREQ. PAIR</span><span>RUNTIME</span><span>RAM</span></div>{experiments.map((item) => <div className={item.pairs === '0' ? 'sensitivity-row no-pair' : 'sensitivity-row'} key={item.support}><b>{item.support}</b><span>{item.threshold}</span><span>{item.items}</span><span>{item.candidates}</span><strong>{item.pairs}</strong><span>{item.runtime}</span><span>{item.ram}</span></div>)}</div><aside className="sensitivity-insight"><b>Temuan:</b> Support makin tinggi membuat ambang makin ketat. Pada 1% terdapat 1.107 frequent pairs, turun menjadi 15 pada 3%, dan tidak ada lagi frequent pairs pada 5% maupun 10%.</aside></section>
+}
