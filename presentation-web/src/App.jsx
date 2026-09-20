@@ -157,6 +157,14 @@ function SupportComparisonSlide() {
   ]
   return <section className="support-comparison-slide" aria-labelledby="support-comparison-title"><div className="section-heading"><p>15 — LAMPIRAN TANYA JAWAB</p><h2 id="support-comparison-title">Jika Support <span>Diubah?</span></h2></div><p className="support-comparison-intro">Gunakan perbandingan ini saat menjelaskan alasan pemilihan minimum support kepada dosen.</p><div className="support-decision-grid">{options.map(([support, threshold, result, tradeoff, use]) => <article className={support === '3%' ? 'selected-support' : ''} key={support}><b>{support}</b><span>ambang {threshold}</span><strong>{result}</strong><p>{tradeoff}</p><em>{use}</em></article>)}</div><aside className="support-comparison-note"><b>Jawaban singkat:</b> 1% cocok untuk eksplorasi pola yang lebih luas, 2% menjadi alternatif moderat, sedangkan <strong>3% dipilih</strong> karena memberi aturan yang tetap bermakna dengan beban komputasi jauh lebih efisien.</aside></section>
 }
+function SupportRulesAppendixSlide() {
+  const datasets = [
+    { support: '1%', subtitle: 'Ambang 182 · 1.107 frequent pair', rules: [['HERB MARKER THY → HERB MARKER ROS', '1,2% · 93,64% · 0,923'], ['HERB MARKER CHI → HERB MARKER PAR', '1,1% · 92,34% · 0,910'], ['HERB MARKER ROS → HERB MARKER THY', '1,2% · 92,08% · 0,908']] },
+    { support: '2%', subtitle: 'Ambang 365 · 109 frequent pair', rules: [['PINK REGENCY TE → GREEN REGENCY T', '3,5% · 83,18% · 0,776'], ['WOODEN STAR CHR → ROSES REGENCY T', '4,2% · 75,93% · 0,733'], ['PINK REGENCY TE → ROSES REGENCY T', '3,3% · 78,71% · 0,729']] },
+    { support: '3%', subtitle: 'Ambang 548 · 15 frequent pair', rules: [['PINK REGENCY TE → GREEN REGENCY T', '3,5% · 83,18% · 0,776'], ['PINK REGENCY TE → ROSES REGENCY T', '3,3% · 78,71% · 0,729'], ['GREEN REGENCY T → ROSES REGENCY T', '4,2% · 75,67% · 0,699']] },
+  ]
+  return <section className="support-rules-slide" aria-labelledby="support-rules-title"><div className="section-heading"><p>16 — LAMPIRAN ASSOCIATION RULE</p><h2 id="support-rules-title">Rule Teratas per <span>Minimum Support</span></h2></div><p className="support-rules-intro">Format metrik: support · confidence · interest. Nama produk disingkat mengikuti keluaran program Python.</p><div className="support-rules-grid">{datasets.map((dataset) => <article className={dataset.support === '3%' ? 'support-rule-card selected-rule-card' : 'support-rule-card'} key={dataset.support}><header><b>{dataset.support}</b><span>{dataset.subtitle}</span></header><ol>{dataset.rules.map(([rule, metric]) => <li key={rule}><strong>{rule}</strong><em>{metric}</em></li>)}</ol></article>)}</div><aside className="support-rules-note"><b>Poin untuk menjawab dosen:</b> 1% menghasilkan rule dengan confidence dan interest tinggi, tetapi jumlah rule sangat banyak. Pada 2% dan 3%, rule Regency Teacup tetap dominan; 3% dipilih karena hasilnya lebih ringkas untuk dianalisis.</aside></section>
+}
 function ThanksSlide() {
   return <section className="thanks-slide" aria-labelledby="thanks-title"><p>ANALISIS BIG DATA · FAISAL</p><h2 id="thanks-title">Terima <span>Kasih</span></h2><div className="thanks-line" aria-hidden="true"><i /><i /><i /></div><small>Penerapan Algoritma PCY untuk Frequent Itemset Mining</small></section>
 }
@@ -174,16 +182,16 @@ function App() {
   const [slide, setSlide] = useState(0)
   const [activeDataStage, setActiveDataStage] = useState(null)
   const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
-  const next = () => setSlide((value) => Math.min(value + 1, 16))
+  const next = () => setSlide((value) => Math.min(value + 1, 17))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage])
   useEffect(() => { document.title = isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isRevisionRoute])
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
-    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 17</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <SensitivityParameterSlide /> : slide === 9 ? <SensitivityResultSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : slide === 14 ? <MethodologySlide /> : slide === 15 ? <SupportComparisonSlide /> : <ThanksSlide />}
+    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 18</span></header>
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <SensitivityParameterSlide /> : slide === 9 ? <SensitivityResultSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : slide === 14 ? <MethodologySlide /> : slide === 15 ? <SupportComparisonSlide /> : slide === 16 ? <SupportRulesAppendixSlide /> : <ThanksSlide />}
     {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
-    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 16} aria-label="Slide berikutnya">→</button></div></footer>
+    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 17} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
 }
 
