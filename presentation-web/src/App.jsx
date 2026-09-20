@@ -179,20 +179,29 @@ function TitleSlide() {
   </section>
 }
 
+function CalculationTitleSlide() {
+  return <section className="calculation-title-slide" aria-labelledby="calculation-title"><p className="kicker">ALUR KOMPUTASI MARKET BASKET</p><h1 id="calculation-title">Perhitungan <span>PCY</span><br />dari Input hingga Output</h1><p className="subtitle">Rute teknis yang memuat pra-hitung data, proses PCY, dan hasil perhitungan aturan asosiasi.</p><div className="calculation-flow"><span>INPUT DATA</span><b>→</b><span>PRA-HITUNG</span><b>→</b><span>PROSES PCY</span><b>→</b><span>OUTPUT</span></div></section>
+}
 function App() {
   const [slide, setSlide] = useState(0)
   const [activeDataStage, setActiveDataStage] = useState(null)
-  const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
-  const next = () => setSlide((value) => Math.min(value + 1, 17))
+  const routePath = window.location.pathname.replace(/\/$/, '')
+  const isRevisionRoute = routePath === '/revisi-pcy'
+  const isCalculationRoute = routePath === '/perhitungan-pcy'
+  const standardSlides = [() => <TitleSlide />, () => <BackgroundSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <MiningConceptSlide />, () => <ProblemSlide />, () => <WorkflowSlide />, () => <SensitivityParameterSlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <ProductInsightSlide />, () => <ConclusionSlide />, () => <MethodologySlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />, () => <ThanksSlide />]
+  const calculationSlides = [() => <CalculationTitleSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <SensitivityParameterSlide />, () => <WorkflowSlide />, () => <MethodologySlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <ProductInsightSlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />]
+  const slides = isCalculationRoute ? calculationSlides : standardSlides
+  const lastSlide = slides.length - 1
+  const next = () => setSlide((value) => Math.min(value + 1, lastSlide))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
-  useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage])
-  useEffect(() => { document.title = isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isRevisionRoute])
-  return <main className={`presentation slide-${slide}`}>
+  useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') setSlide((value) => Math.min(value + 1, lastSlide)); if (event.key === 'ArrowLeft') setSlide((value) => Math.max(value - 1, 0)) }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage, lastSlide])
+  useEffect(() => { document.title = isCalculationRoute ? 'Perhitungan PCY | Input, Proses, Output' : isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isCalculationRoute, isRevisionRoute])
+  return <main className={`presentation slide-${slide}${isCalculationRoute ? ' calculation-route' : ''}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
-    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 18</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <SensitivityParameterSlide /> : slide === 9 ? <SensitivityResultSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : slide === 14 ? <MethodologySlide /> : slide === 15 ? <SupportComparisonSlide /> : slide === 16 ? <SupportRulesAppendixSlide /> : <ThanksSlide />}
+    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span></header>
+    {slides[slide]()}
     {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
-    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 17} aria-label="Slide berikutnya">→</button></div></footer>
+    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === lastSlide} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
 }
 
