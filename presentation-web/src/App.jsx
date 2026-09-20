@@ -149,6 +149,14 @@ function ConclusionSlide() {
 function MethodologySlide() {
   return <section className="methodology-slide" aria-labelledby="methodology-title"><div className="section-heading"><p>14 — LAMPIRAN METODOLOGI</p><h2 id="methodology-title">Rancangan <span>Pengujian PCY</span></h2></div><div className="methodology-grid"><article><span>KONFIGURASI TETAP</span><strong>18.294 basket</strong><p>100.003 bitmap bucket · 2 pass PCY · dataset bersih yang sama untuk seluruh percobaan.</p></article><article><span>PENGUKURAN UTAMA</span><strong>Runtime &amp; RAM</strong><p>Dicatat bersama jumlah frequent item, kandidat pair, dan frequent pair pada setiap minimum support.</p></article><article><span>PENGULANGAN</span><strong>5× pada 1–3%</strong><p>Nilai runtime yang ditampilkan adalah rata-rata lima percobaan dengan konfigurasi yang sama.</p></article><article><span>BATAS EKSPERIMEN</span><strong>1× pada 5–10%</strong><p>Pengujian tidak diulang karena tidak ditemukan frequent pair; hasil dipakai untuk menunjukkan ambang terlalu ketat.</p></article></div><aside className="methodology-note"><b>Catatan interpretasi:</b> semua hasil dibandingkan pada dataset dan konfigurasi PCY yang sama. Perbedaan runtime kecil antarpercobaan dapat dipengaruhi kondisi perangkat saat eksekusi.</aside></section>
 }
+function SupportComparisonSlide() {
+  const options = [
+    ['1%', '182 transaksi', '1.107 pair · 375.747 kandidat', 'Paling banyak aturan, tetapi RAM 59,47 MB dan runtime 160,88 s.', 'Eksplorasi pola luas'],
+    ['2%', '365 transaksi', '109 pair · 21.080 kandidat', 'Lebih ringkas, namun aturan masih cukup banyak untuk ditinjau.', 'Alternatif moderat'],
+    ['3%', '548 transaksi', '15 pair · 815 kandidat', 'Kandidat sangat efisien dan masih menghasilkan aturan yang kuat.', 'Dipilih untuk analisis'],
+  ]
+  return <section className="support-comparison-slide" aria-labelledby="support-comparison-title"><div className="section-heading"><p>15 — LAMPIRAN TANYA JAWAB</p><h2 id="support-comparison-title">Jika Support <span>Diubah?</span></h2></div><p className="support-comparison-intro">Gunakan perbandingan ini saat menjelaskan alasan pemilihan minimum support kepada dosen.</p><div className="support-decision-grid">{options.map(([support, threshold, result, tradeoff, use]) => <article className={support === '3%' ? 'selected-support' : ''} key={support}><b>{support}</b><span>ambang {threshold}</span><strong>{result}</strong><p>{tradeoff}</p><em>{use}</em></article>)}</div><aside className="support-comparison-note"><b>Jawaban singkat:</b> 1% cocok untuk eksplorasi pola yang lebih luas, 2% menjadi alternatif moderat, sedangkan <strong>3% dipilih</strong> karena memberi aturan yang tetap bermakna dengan beban komputasi jauh lebih efisien.</aside></section>
+}
 function ThanksSlide() {
   return <section className="thanks-slide" aria-labelledby="thanks-title"><p>ANALISIS BIG DATA · FAISAL</p><h2 id="thanks-title">Terima <span>Kasih</span></h2><div className="thanks-line" aria-hidden="true"><i /><i /><i /></div><small>Penerapan Algoritma PCY untuk Frequent Itemset Mining</small></section>
 }
@@ -166,16 +174,16 @@ function App() {
   const [slide, setSlide] = useState(0)
   const [activeDataStage, setActiveDataStage] = useState(null)
   const isRevisionRoute = window.location.pathname.replace(/\/$/, '') === '/revisi-pcy'
-  const next = () => setSlide((value) => Math.min(value + 1, 15))
+  const next = () => setSlide((value) => Math.min(value + 1, 16))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') next(); if (event.key === 'ArrowLeft') previous() }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage])
   useEffect(() => { document.title = isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isRevisionRoute])
   return <main className={`presentation slide-${slide}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
-    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 16</span></header>
-    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <SensitivityParameterSlide /> : slide === 9 ? <SensitivityResultSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : slide === 14 ? <MethodologySlide /> : <ThanksSlide />}
+    <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / 17</span></header>
+    {slide === 0 ? <TitleSlide /> : slide === 1 ? <BackgroundSlide /> : slide === 2 ? <DatasetSlide /> : slide === 3 ? <PreprocessingSlide onOpenData={setActiveDataStage} /> : slide === 4 ? <PreprocessingResultSlide /> : slide === 5 ? <MiningConceptSlide /> : slide === 6 ? <ProblemSlide /> : slide === 7 ? <WorkflowSlide /> : slide === 8 ? <SensitivityParameterSlide /> : slide === 9 ? <SensitivityResultSlide /> : slide === 10 ? <EvaluationSlide /> : slide === 11 ? <AssociationRulesSlide /> : slide === 12 ? <ProductInsightSlide /> : slide === 13 ? <ConclusionSlide /> : slide === 14 ? <MethodologySlide /> : slide === 15 ? <SupportComparisonSlide /> : <ThanksSlide />}
     {activeDataStage && <PreprocessingDataModal stage={activeDataStage} onClose={() => setActiveDataStage(null)} />}
-    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 15} aria-label="Slide berikutnya">→</button></div></footer>
+    <footer className="deck-controls"><span>Gunakan ← → untuk berpindah</span><div><button onClick={previous} disabled={slide === 0} aria-label="Slide sebelumnya">←</button><button onClick={next} disabled={slide === 16} aria-label="Slide berikutnya">→</button></div></footer>
   </main>
 }
 
