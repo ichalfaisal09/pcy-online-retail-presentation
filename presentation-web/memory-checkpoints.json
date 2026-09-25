@@ -1,0 +1,113 @@
+[
+  {
+    "support_percent": 1.0,
+    "threshold": 182,
+    "frequent_items": 893,
+    "candidate_pairs": 375747,
+    "frequent_pairs": 1107,
+    "rules": 1869,
+    "runtime_seconds": 206.71738639997784,
+    "total_peak_mb": 58.85599422454834,
+    "checkpoints": [
+      {
+        "stage": "Setelah Pass 1",
+        "current_mb": 2.915003776550293,
+        "peak_mb": 3.003389358520508
+      },
+      {
+        "stage": "Setelah bitmap",
+        "current_mb": 3.710421562194824,
+        "peak_mb": 3.7104673385620117
+      },
+      {
+        "stage": "Setelah Pass 2",
+        "current_mb": 51.51632595062256,
+        "peak_mb": 58.85599422454834
+      },
+      {
+        "stage": "Setelah frequent pair",
+        "current_mb": 51.55155086517334,
+        "peak_mb": 58.85599422454834
+      },
+      {
+        "stage": "Setelah association rule",
+        "current_mb": 51.837958335876465,
+        "peak_mb": 58.85599422454834
+      }
+    ]
+  },
+  {
+    "support_percent": 2.0,
+    "threshold": 365,
+    "frequent_items": 348,
+    "candidate_pairs": 21080,
+    "frequent_pairs": 109,
+    "rules": 215,
+    "runtime_seconds": 169.20603040000424,
+    "total_peak_mb": 6.3984527587890625,
+    "checkpoints": [
+      {
+        "stage": "Setelah Pass 1",
+        "current_mb": 2.914486885070801,
+        "peak_mb": 3.0028724670410156
+      },
+      {
+        "stage": "Setelah bitmap",
+        "current_mb": 3.709904670715332,
+        "peak_mb": 3.7099504470825195
+      },
+      {
+        "stage": "Setelah Pass 2",
+        "current_mb": 6.2470550537109375,
+        "peak_mb": 6.3984527587890625
+      },
+      {
+        "stage": "Setelah frequent pair",
+        "current_mb": 6.2515106201171875,
+        "peak_mb": 6.3984527587890625
+      },
+      {
+        "stage": "Setelah association rule",
+        "current_mb": 6.2845458984375,
+        "peak_mb": 6.3984527587890625
+      }
+    ]
+  },
+  {
+    "support_percent": 3.0,
+    "threshold": 548,
+    "frequent_items": 149,
+    "candidate_pairs": 815,
+    "frequent_pairs": 15,
+    "rules": 30,
+    "runtime_seconds": 157.06583950005006,
+    "total_peak_mb": 3.9855690002441406,
+    "checkpoints": [
+      {
+        "stage": "Setelah Pass 1",
+        "current_mb": 2.9144716262817383,
+        "peak_mb": 3.002857208251953
+      },
+      {
+        "stage": "Setelah bitmap",
+        "current_mb": 3.6864519119262695,
+        "peak_mb": 3.686497688293457
+      },
+      {
+        "stage": "Setelah Pass 2",
+        "current_mb": 3.8304901123046875,
+        "peak_mb": 3.9855690002441406
+      },
+      {
+        "stage": "Setelah frequent pair",
+        "current_mb": 3.8310775756835938,
+        "peak_mb": 3.9855690002441406
+      },
+      {
+        "stage": "Setelah association rule",
+        "current_mb": 3.8357696533203125,
+        "peak_mb": 3.9855690002441406
+      }
+    ]
+  }
+]

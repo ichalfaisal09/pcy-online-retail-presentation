@@ -112,19 +112,17 @@ export function RuleTraceSlide() {
 
 export function MemoryTimelineSlide() {
   const rows = [
-    ['Awal', '—', 'Belum ada struktur PCY'],
-    ['Pass 1', 'item_counts + bucket_counts', 'Count item dan bucket bertambah'],
-    ['Transisi', '+ frequent_items + bitmap', 'Count bucket masih tersimpan'],
-    ['Pass 2', '+ candidate_pair_counts', 'Memori naik mengikuti jumlah kandidat'],
-    ['Output', '+ frequent_pairs + rules', 'Hasil akhir dibentuk'],
-    ['Selesai', 'tracemalloc peak', 'Nilai tertinggi selama seluruh tahap'],
+    ['Setelah Pass 1', '2,92 MB', '2,91 MB', '2,91 MB'],
+    ['Setelah bitmap', '3,71 MB', '3,71 MB', '3,69 MB'],
+    ['Setelah Pass 2', '51,52 MB', '6,25 MB', '3,83 MB'],
+    ['Setelah frequent pair', '51,55 MB', '6,25 MB', '3,83 MB'],
+    ['Setelah association rule', '51,84 MB', '6,28 MB', '3,84 MB'],
   ]
-  return <section className="memory-slide" aria-labelledby="memory-timeline-title"><div className="section-heading"><p>11 — JEJAK MEMORI</p><h2 id="memory-timeline-title">Struktur Aktif pada <span>Setiap Tahap</span></h2></div><TraceTable headers={['TAHAP', 'STRUKTUR AKTIF', 'DAMPAK MEMORI']} rows={rows} highlightLast /><aside className="memory-callout warning"><b>Catatan:</b> kode saat ini mengukur peak gabungan seluruh proses. Untuk memperoleh angka MB per tahap, perlu ditambahkan snapshot setelah Pass 1, pembentukan bitmap, Pass 2, dan rule generation.</aside></section>
+  return <section className="memory-slide" aria-labelledby="memory-timeline-title"><div className="section-heading"><p>11 — CHECKPOINT MEMORI</p><h2 id="memory-timeline-title">Alokasi Aktif pada <span>Setiap Tahap</span></h2></div><p className="checkpoint-intro">Hasil satu pengujian khusus checkpoint menggunakan 18.294 basket, 100.003 bucket, hash CRC32, dan implementasi Python yang sama.</p><TraceTable headers={['TAHAP', 'SUPPORT 1%', 'SUPPORT 2%', 'SUPPORT 3%']} rows={rows} /><div className="checkpoint-peaks"><article><span>PEAK 1%</span><strong>58,86 MB</strong><small>375.747 kandidat</small></article><article><span>PEAK 2%</span><strong>6,40 MB</strong><small>21.080 kandidat</small></article><article><span>PEAK 3%</span><strong>3,99 MB</strong><small>815 kandidat</small></article></div><aside className="memory-callout mint"><b>Temuan utama:</b> kebutuhan awal Pass 1 dan bitmap hampir sama pada seluruh support. Selisih terbesar muncul pada Pass 2 ketika <code>candidate_pair_counts</code> menyimpan kandidat yang lolos filter.</aside><aside className="checkpoint-note"><b>Cara membaca:</b> nilai tabel adalah alokasi yang masih aktif (<em>current</em>) saat checkpoint diambil. Kartu di bawah tabel menunjukkan nilai tertinggi (<em>peak</em>) sepanjang proses.</aside></section>
 }
-
 export function MemoryResultsSlide() {
   const maxPeak = Math.max(...memoryResults.map((item) => item[2]))
-  return <section className="memory-slide" aria-labelledby="memory-results-title"><div className="section-heading"><p>12 — DATASET ASLI</p><h2 id="memory-results-title">Peak Memory berdasarkan <span>Minimum Support</span></h2></div><div className="memory-chart">{memoryResults.map(([support, candidates, peak, label]) => <div className="memory-chart-row" key={support}><b>{support}</b><span>{candidates} kandidat</span><div><i style={{ width: `${Math.max(6, (peak / maxPeak) * 100)}%` }} /></div><strong>{label}</strong></div>)}</div><aside className="memory-callout mint"><b>Hubungan utama:</b> pada 1% terdapat 375.747 kandidat dan peak 59,47 MB. Pada 3% hanya 815 kandidat dan peak turun menjadi 3,83 MB. Dictionary kandidat menjadi faktor perubahan terbesar.</aside></section>
+  return <section className="memory-slide" aria-labelledby="memory-results-title"><div className="section-heading"><p>12 — EKSPERIMEN UTAMA</p><h2 id="memory-results-title">Peak Memory berdasarkan <span>Minimum Support</span></h2></div><div className="memory-chart">{memoryResults.map(([support, candidates, peak, label]) => <div className="memory-chart-row" key={support}><b>{support}</b><span>{candidates} kandidat</span><div><i style={{ width: `${Math.max(6, (peak / maxPeak) * 100)}%` }} /></div><strong>{label}</strong></div>)}</div><aside className="memory-callout mint"><b>Hubungan utama:</b> tabel ini memakai hasil eksperimen utama sebelumnya: pada 1% terdapat 375.747 kandidat dan peak 59,47 MB. Pada 3% hanya 815 kandidat dan peak turun menjadi 3,83 MB. Dictionary kandidat menjadi faktor perubahan terbesar.</aside></section>
 }
 
 export function MeasurementSlide() {
@@ -134,6 +132,7 @@ export function MeasurementSlide() {
 export function MemoryConclusionSlide() {
   return <section className="memory-slide" aria-labelledby="memory-conclusion-title"><div className="section-heading"><p>14 — KESIMPULAN</p><h2 id="memory-conclusion-title">Alur Lengkap <span>Perhitungan Memori</span></h2></div><div className="memory-conclusion-grid"><article><span>1 · FILTER</span><strong>Bitmap menyaring</strong><p>Bucket 0 menghentikan kandidat sebelum count dilakukan pada Pass 2.</p></article><article><span>2 · REPRESENTASI</span><strong>List ≠ bit-packed</strong><p>Implementasi Python menggunakan memori lebih besar daripada ukuran ideal bitmap.</p></article><article><span>3 · FAKTOR UTAMA</span><strong>Jumlah kandidat</strong><p>Support rendah meningkatkan jumlah dictionary entry dan peak memory.</p></article></div><aside className="memory-final-statement">Urutannya adalah: basket dibaca → item dan bucket dihitung → bitmap dibentuk → kandidat disaring dan dihitung → frequent pair dipilih → rule dibuat → puncak alokasi dilaporkan.</aside></section>
 }
+
 
 
 
