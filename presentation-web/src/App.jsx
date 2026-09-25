@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import PreprocessingDataModal from './PreprocessingDataModal'
 import { SensitivityParameterSlide, SensitivityResultSlide } from './SensitivitySlides'
 import InfoTerm from './InfoTerm'
+import { BitmapFormulaSlide, CandidateMemorySlide, MemoryConclusionSlide, MemoryMeasurementSlide, MemoryResultsSlide, MemoryScopeSlide, MemoryTitleSlide, PythonMemorySlide } from './MemorySlides'
 import './App.css'
 
 const details = [['Nama', 'Faisal'], ['NIM', 'D082261012'], ['Mata Kuliah', 'Analisis Big Data'], ['Dosen Pengampu', 'Mukarramah Yusuf, B.Sc., M.Sc., Ph.D.']]
@@ -184,15 +185,17 @@ function App() {
   const routePath = window.location.pathname.replace(/\/$/, '')
   const isRevisionRoute = routePath === '/revisi-pcy'
   const isCalculationRoute = routePath === '/perhitungan-pcy'
+  const isMemoryRoute = routePath === '/memori-pcy'
   const standardSlides = [() => <TitleSlide />, () => <BackgroundSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <MiningConceptSlide />, () => <ProblemSlide />, () => <WorkflowSlide />, () => <SensitivityParameterSlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <ConclusionSlide />, () => <MethodologySlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />, () => <ThanksSlide />]
   const calculationSlides = [() => <CalculationTitleSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <SensitivityParameterSlide />, () => <WorkflowSlide />, () => <MethodologySlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />]
-  const slides = isCalculationRoute ? calculationSlides : standardSlides
+  const memorySlides = [() => <MemoryTitleSlide />, () => <MemoryScopeSlide />, () => <BitmapFormulaSlide />, () => <PythonMemorySlide />, () => <CandidateMemorySlide />, () => <MemoryResultsSlide />, () => <MemoryMeasurementSlide />, () => <MemoryConclusionSlide />]
+  const slides = isMemoryRoute ? memorySlides : isCalculationRoute ? calculationSlides : standardSlides
   const lastSlide = slides.length - 1
   const next = () => setSlide((value) => Math.min(value + 1, lastSlide))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') setSlide((value) => Math.min(value + 1, lastSlide)); if (event.key === 'ArrowLeft') setSlide((value) => Math.max(value - 1, 0)) }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage, lastSlide])
-  useEffect(() => { document.title = isCalculationRoute ? 'Perhitungan PCY | Input, Proses, Output' : isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isCalculationRoute, isRevisionRoute])
-  return <main className={`presentation slide-${slide}${isCalculationRoute ? ' calculation-route' : ''}`}>
+  useEffect(() => { document.title = isMemoryRoute ? 'Memori PCY | Perhitungan dan Pengukuran' : isCalculationRoute ? 'Perhitungan PCY | Input, Proses, Output' : isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isCalculationRoute, isMemoryRoute, isRevisionRoute])
+  return <main className={`presentation slide-${slide}${isCalculationRoute ? ' calculation-route' : ''}${isMemoryRoute ? ' memory-route' : ''}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
     <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span></header>
     {slides[slide]()}
@@ -202,3 +205,5 @@ function App() {
 }
 
 export default App
+
+
