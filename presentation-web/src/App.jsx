@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import PreprocessingDataModal from './PreprocessingDataModal'
 import { SensitivityParameterSlide, SensitivityResultSlide } from './SensitivitySlides'
 import InfoTerm from './InfoTerm'
-import { BitmapMemorySlide, BitmapTraceSlide, BucketStateSlide, CandidateGateSlide, FrequentPairTraceSlide, ItemCountTraceSlide, MeasurementSlide, MemoryConclusionSlide, MemoryResultsSlide, MemoryTimelineSlide, MemoryTitleSlide, PairHashTraceSlide, RuleTraceSlide, TraceInputSlide } from './MemorySlides'
+import { BitmapMemorySlide, BitmapTraceSlide, BucketStateSlide, CandidateGateSlide, FrequentPairTraceSlide, ItemCountTraceSlide, MeasurementSlide, MemoryConclusionSlide, MemoryResultsSlide, PairMatrixSlide, MemoryTimelineSlide, MemoryTitleSlide, PairHashTraceSlide, RuleTraceSlide, TraceInputSlide } from './MemorySlides'
 import './App.css'
 
 const details = [['Nama', 'Faisal'], ['NIM', 'D082261012'], ['Mata Kuliah', 'Analisis Big Data'], ['Dosen Pengampu', 'Mukarramah Yusuf, B.Sc., M.Sc., Ph.D.']]
@@ -188,7 +188,7 @@ function App() {
   const isMemoryRoute = routePath === '/memori-pcy'
   const standardSlides = [() => <TitleSlide />, () => <BackgroundSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <MiningConceptSlide />, () => <ProblemSlide />, () => <WorkflowSlide />, () => <SensitivityParameterSlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <ConclusionSlide />, () => <MethodologySlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />, () => <ThanksSlide />]
   const calculationSlides = [() => <CalculationTitleSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <SensitivityParameterSlide />, () => <WorkflowSlide />, () => <MethodologySlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />]
-  const memorySlides = [() => <MemoryTitleSlide />, () => <TraceInputSlide />, () => <ItemCountTraceSlide />, () => <PairHashTraceSlide />, () => <BucketStateSlide />, () => <BitmapTraceSlide />, () => <BitmapMemorySlide />, () => <CandidateGateSlide />, () => <FrequentPairTraceSlide />, () => <RuleTraceSlide />, () => <MemoryTimelineSlide />, () => <MemoryResultsSlide />, () => <MeasurementSlide />, () => <MemoryConclusionSlide />]
+  const memorySlides = [() => <MemoryTitleSlide />, () => <TraceInputSlide />, () => <ItemCountTraceSlide />, () => <PairMatrixSlide />, () => <PairHashTraceSlide />, () => <BucketStateSlide />, () => <BitmapTraceSlide />, () => <BitmapMemorySlide />, () => <CandidateGateSlide />, () => <FrequentPairTraceSlide />, () => <RuleTraceSlide />, () => <MemoryTimelineSlide />, () => <MemoryResultsSlide />, () => <MeasurementSlide />, () => <MemoryConclusionSlide />]
   const slides = isMemoryRoute ? memorySlides : isCalculationRoute ? calculationSlides : standardSlides
   const lastSlide = slides.length - 1
   const next = () => setSlide((value) => Math.min(value + 1, lastSlide))
@@ -205,6 +205,7 @@ function App() {
 }
 
 export default App
+
 
 
 
