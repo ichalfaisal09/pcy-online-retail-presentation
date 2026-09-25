@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 const sampleBaskets = [
   ['B1', 'A, B, C'], ['B2', 'A, B'], ['B3', 'B, C'],
   ['B4', 'C, D'], ['B5', 'C, D'], ['B6', 'A, D'],
@@ -36,22 +38,47 @@ export function ItemCountTraceSlide() {
 }
 
 export function PairMatrixSlide() {
-  const matrix = [
-    ['', 'A', 'B', 'C', 'D'],
-    ['A', '—', '2', '1', '1'],
-    ['B', '', '—', '2', '0'],
-    ['C', '', '', '—', '2'],
-    ['D', '', '', '', '—'],
+  const scanBaskets = [
+    { id: 'B1', items: ['A', 'B', 'C'], pairs: ['AB', 'AC', 'BC'] },
+    { id: 'B2', items: ['A', 'B'], pairs: ['AB'] },
+    { id: 'B3', items: ['B', 'C'], pairs: ['BC'] },
+    { id: 'B4', items: ['C', 'D'], pairs: ['CD'] },
+    { id: 'B5', items: ['C', 'D'], pairs: ['CD'] },
+    { id: 'B6', items: ['A', 'D'], pairs: ['AD'] },
   ]
-  const cellClass = (row, column, value) => {
-    if (row === 0 || column === 0) return 'matrix-label'
+  const labels = ['A', 'B', 'C', 'D']
+  const [step, setStep] = useState(0)
+  const [playing, setPlaying] = useState(false)
+  useEffect(() => {
+    if (!playing || step >= scanBaskets.length) return undefined
+    const timer = window.setTimeout(() => {
+      setStep((value) => Math.min(scanBaskets.length, value + 1))
+      if (step + 1 >= scanBaskets.length) setPlaying(false)
+    }, 1200)
+    return () => window.clearTimeout(timer)
+  }, [playing, step, scanBaskets.length])
+  const counts = { AB: 0, AC: 0, AD: 0, BC: 0, BD: 0, CD: 0 }
+  scanBaskets.slice(0, step).forEach((basket) => basket.pairs.forEach((pair) => { counts[pair] += 1 }))
+  const current = step > 0 ? scanBaskets[step - 1] : null
+  const previousCounts = { ...counts }
+  if (current) current.pairs.forEach((pair) => { previousCounts[pair] -= 1 })
+  const reset = () => { setPlaying(false); setStep(0) }
+  const previous = () => { setPlaying(false); setStep((value) => Math.max(0, value - 1)) }
+  const next = () => { setPlaying(false); setStep((value) => Math.min(scanBaskets.length, value + 1)) }
+  const cellClass = (row, column, pair, value) => {
     if (column < row) return 'matrix-unused'
     if (row === column) return 'matrix-diagonal'
-    if (value === '0') return 'matrix-zero'
-    if (Number(value) >= 2) return 'matrix-frequent'
-    return 'matrix-candidate'
+    const status = value >= 2 ? 'matrix-frequent' : value > 0 ? 'matrix-candidate' : 'matrix-zero'
+    return current?.pairs.includes(pair) ? status + ' matrix-updated' : status
   }
-  return <section className="memory-slide" aria-labelledby="pair-matrix-title"><div className="section-heading"><p>03 — VISUALISASI PASANGAN</p><h2 id="pair-matrix-title">Matriks Segitiga <span>Pasangan Item</span></h2></div><div className="matrix-layout"><div className="pair-matrix" role="table" aria-label="Matriks count pasangan item A sampai D">{matrix.map((row, rowIndex) => <div className="matrix-row" role="row" key={rowIndex}>{row.map((value, columnIndex) => <span className={cellClass(rowIndex, columnIndex, value)} role="cell" key={columnIndex}>{value}</span>)}</div>)}</div><article className="matrix-reading"><span>CARA MEMBACA MATRIKS</span><strong>1. Cari baris A dan kolom B</strong><p>Angka pada pertemuannya adalah <b>2</b>. Artinya, produk A dan B ditemukan bersama pada dua basket: B1 dan B2.</p><strong>2. Mengapa bagian bawah kosong?</strong><p>Pasangan A–B dan B–A dianggap sama. Karena count A–B sudah ditulis di bagian atas, nilainya tidak perlu ditulis kembali pada baris B dan kolom A.</p></article></div><div className="matrix-legend"><span><i className="legend-frequent" />Frequent · count ≥ 2</span><span><i className="legend-candidate" />Muncul tetapi belum frequent</span><span><i className="legend-zero" />Tidak pernah muncul</span><span><i className="legend-diagonal" />Pasangan dengan dirinya sendiri</span></div><aside className="memory-callout"><b>Hubungan dengan PCY:</b> matriks ini memvisualisasikan seluruh count pasangan pada contoh kecil. PCY tidak menyimpan matriks pasangan sebesar ini; setiap pasangan di-hash ke bucket agar penyaringan kandidat lebih hemat memori.</aside></section>
+  return <section className="memory-slide" aria-labelledby="pair-matrix-title"><div className="section-heading"><p>03 — VISUALISASI PASANGAN</p><h2 id="pair-matrix-title">Pertambahan Count pada <span>Matriks Pasangan</span></h2></div>
+    <div className="matrix-scan-status" aria-live="polite"><div><span>PROGRES PEMINDAIAN</span><strong>{step} / {scanBaskets.length} basket</strong></div><div className="scan-progress"><i style={{ width: `${(step / scanBaskets.length) * 100}%` }} /></div><div className="matrix-controls"><button type="button" onClick={reset} disabled={step === 0}>Reset</button><button type="button" onClick={previous} disabled={step === 0}>← Sebelumnya</button><button type="button" onClick={next} disabled={step === scanBaskets.length}>Basket berikutnya →</button><button type="button" className={playing ? 'active' : ''} onClick={() => setPlaying((value) => !value)} disabled={step === scanBaskets.length}>{playing ? 'Jeda' : 'Putar otomatis'}</button></div></div>
+    <div className="matrix-layout"><div className="pair-matrix" role="table" aria-label="Matriks count pasangan item A sampai D"><div className="matrix-row"><span className="matrix-label" />{labels.map((label) => <span className="matrix-label" key={label}>{label}</span>)}</div>{labels.map((rowLabel, row) => <div className="matrix-row" role="row" key={rowLabel}><span className="matrix-label">{rowLabel}</span>{labels.map((columnLabel, column) => { const pair = row < column ? rowLabel + columnLabel : columnLabel + rowLabel; const value = row === column ? '—' : counts[pair]; return <span className={cellClass(row, column, pair, value)} role="cell" key={columnLabel}>{column < row ? '' : value}</span> })}</div>)}</div>
+      <article className="matrix-reading"><span>BASKET YANG SEDANG DIPROSES</span>{current ? <><strong>{current.id} = {'{'}{current.items.join(', ')}{'}'}</strong><p>Pasangan terbentuk: <b>{current.pairs.map((pair) => pair[0] + '–' + pair[1]).join(', ')}</b>.</p><div className="increment-log">{current.pairs.map((pair) => <div key={pair}><span>{pair[0]}–{pair[1]}</span><b>{previousCounts[pair]} → {counts[pair]}</b><em>{counts[pair] >= 2 ? 'Frequent' : 'Belum frequent'}</em></div>)}</div></> : <><strong>Belum ada basket dipindai</strong><p>Klik <b>Basket berikutnya</b> untuk membaca B1 dan melihat count matriks bertambah.</p></>}<small>Batas minimum contoh: count ≥ 2</small></article>
+    </div>
+    <div className="matrix-legend"><span><i className="legend-frequent" />Frequent · count ≥ 2</span><span><i className="legend-candidate" />Sudah muncul, count masih 1</span><span><i className="legend-zero" />Belum pernah muncul</span><span><i className="legend-diagonal" />Item dengan dirinya sendiri</span></div>
+    <aside className="memory-callout"><b>Yang perlu diamati:</b> angka bertambah ketika basket dibaca. Contohnya A–B berubah 0 → 1 saat B1, kemudian 1 → 2 saat B2 dan statusnya berubah menjadi frequent.</aside>
+  </section>
 }
 export function PairHashTraceSlide() {
   return <section className="memory-slide" aria-labelledby="pair-hash-title"><div className="section-heading"><p>04 — PASS 1B</p><h2 id="pair-hash-title">Membentuk Pasangan dan <span>Hash Bucket</span></h2></div><div className="hash-formula"><span>stable_pair_hash(A, B)</span><b>=</b><span>crc32(&quot;A\0B&quot;) mod 7</span><b>=</b><strong>bucket 4</strong></div><TraceTable headers={['PASANGAN', 'KEMUNCULAN', 'BUCKET', 'COUNT BUCKET AKHIR']} rows={pairTrace} /><aside className="memory-callout"><b>Collision:</b> A–C dan A–D sama-sama masuk bucket 3. Bucket menyimpan total gabungan 2, bukan identitas pasangan yang membentuknya.</aside></section>
@@ -107,6 +134,8 @@ export function MeasurementSlide() {
 export function MemoryConclusionSlide() {
   return <section className="memory-slide" aria-labelledby="memory-conclusion-title"><div className="section-heading"><p>14 — KESIMPULAN</p><h2 id="memory-conclusion-title">Alur Lengkap <span>Perhitungan Memori</span></h2></div><div className="memory-conclusion-grid"><article><span>1 · FILTER</span><strong>Bitmap menyaring</strong><p>Bucket 0 menghentikan kandidat sebelum count dilakukan pada Pass 2.</p></article><article><span>2 · REPRESENTASI</span><strong>List ≠ bit-packed</strong><p>Implementasi Python menggunakan memori lebih besar daripada ukuran ideal bitmap.</p></article><article><span>3 · FAKTOR UTAMA</span><strong>Jumlah kandidat</strong><p>Support rendah meningkatkan jumlah dictionary entry dan peak memory.</p></article></div><aside className="memory-final-statement">Urutannya adalah: basket dibaca → item dan bucket dihitung → bitmap dibentuk → kandidat disaring dan dihitung → frequent pair dipilih → rule dibuat → puncak alokasi dilaporkan.</aside></section>
 }
+
+
 
 
 
