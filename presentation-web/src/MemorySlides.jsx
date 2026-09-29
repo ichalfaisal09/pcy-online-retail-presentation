@@ -29,8 +29,8 @@ export function MemoryTitleSlide() {
   return <section className="calculation-title-slide memory-title-slide" aria-labelledby="memory-title"><p className="kicker">TRACE PERHITUNGAN PCY</p><h1 id="memory-title">Dari Basket hingga <span>Memori PCY</span></h1><p className="subtitle">Satu contoh yang diikuti langkah demi langkah: menghitung item, mengisi bucket, membuat bitmap, menyaring kandidat, dan membaca penggunaan memorinya.</p><div className="calculation-flow"><span>INPUT</span><b>→</b><span>PASS 1</span><b>→</b><span>BITMAP</span><b>→</b><span>PASS 2</span><b>→</b><span>OUTPUT</span></div></section>
 }
 
-export function TraceInputSlide() {
-  return <section className="memory-slide" aria-labelledby="trace-input-title"><div className="section-heading"><p>01 — INPUT CONTOH</p><h2 id="trace-input-title">Dataset Mini yang <span>Akan Dilacak</span></h2></div><div className="trace-input-layout"><TraceTable headers={['BASKET', 'ITEM UNIK']} rows={sampleBaskets} /><article className="trace-config"><span>KONFIGURASI CONTOH</span><strong>6 basket · 4 item · 7 bucket</strong><div className="mini-formula">floor(33,34% × 6) = <b>2</b></div><p>Item atau pasangan harus muncul minimal <b>2 kali</b> agar dinyatakan frequent.</p></article></div><aside className="memory-callout"><b>Mengapa contoh kecil?</b> Seluruh perubahan struktur data dapat diperlihatkan. Setelah alurnya dipahami, rumus yang sama diterapkan pada 18.294 basket dan 100.003 bucket.</aside></section>
+export function TraceInputSlide({ showNotation = false }) {
+  return <section className="memory-slide" aria-labelledby="trace-input-title"><div className="section-heading"><p>01 — INPUT CONTOH</p><h2 id="trace-input-title">Dataset Mini yang <span>Akan Dilacak</span></h2></div><div className="trace-input-layout"><TraceTable headers={['BASKET', 'ITEM UNIK']} rows={sampleBaskets} /><article className="trace-config"><span>KONFIGURASI CONTOH</span><strong>6 basket · 4 item · 7 bucket</strong>{showNotation && <div className="basket-k-notation"><p><b>k</b> = jumlah item unik dalam satu basket</p><strong>Jumlah pasangan = k(k−1) ÷ 2</strong><small>B1 = {'{'}A, B, C{'}'} → k = 3 → 3 × 2 ÷ 2 = <b>3 pasangan</b><br />(A–B, A–C, B–C)</small></div>}<div className="mini-formula">floor(33,34% × 6) = <b>2</b></div><p>Item atau pasangan harus muncul minimal <b>2 kali</b> agar dinyatakan frequent.</p></article></div><aside className="memory-callout"><b>Mengapa contoh kecil?</b> Seluruh perubahan struktur data dapat diperlihatkan. Setelah alurnya dipahami, rumus yang sama diterapkan pada 18.294 basket dan 100.003 bucket.</aside></section>
 }
 
 export function ItemCountTraceSlide() {
@@ -80,8 +80,8 @@ export function PairMatrixSlide() {
     <aside className="memory-callout"><b>Yang perlu diamati:</b> angka bertambah ketika basket dibaca. Contohnya A–B berubah 0 → 1 saat B1, kemudian 1 → 2 saat B2 dan statusnya berubah menjadi frequent.</aside>
   </section>
 }
-export function PairHashTraceSlide() {
-  return <section className="memory-slide" aria-labelledby="pair-hash-title"><div className="section-heading"><p>04 — PASS 1B</p><h2 id="pair-hash-title">Membentuk Pasangan dan <span>Hash Bucket</span></h2></div><div className="hash-formula"><span>stable_pair_hash(A, B)</span><b>=</b><span>crc32(&quot;A\0B&quot;) mod 7</span><b>=</b><strong>bucket 4</strong></div><TraceTable headers={['PASANGAN', 'KEMUNCULAN', 'BUCKET', 'COUNT BUCKET AKHIR']} rows={pairTrace} /><aside className="memory-callout"><b>Collision:</b> A–C dan A–D sama-sama masuk bucket 3. Bucket menyimpan total gabungan 2, bukan identitas pasangan yang membentuknya.</aside></section>
+export function PairHashTraceSlide({ showNotation = false }) {
+  return <section className="memory-slide" aria-labelledby="pair-hash-title"><div className="section-heading"><p>04 — PASS 1B</p><h2 id="pair-hash-title">Membentuk Pasangan dan <span>Hash Bucket</span></h2></div><div className="hash-formula"><span>stable_pair_hash(A, B)</span><b>=</b><span>crc32(&quot;A\0B&quot;) mod 7</span><b>=</b><strong>bucket 4</strong></div><TraceTable headers={['PASANGAN', 'KEMUNCULAN', 'BUCKET', 'COUNT BUCKET AKHIR']} rows={pairTrace} />{showNotation && <aside className="k-total-note"><b>Total pasangan seluruh data</b> = jumlah k(k−1) ÷ 2 dari setiap basket satu per satu. Nilai ini tidak dihitung sekali menggunakan n produk di seluruh dataset.</aside>}<aside className="memory-callout"><b>Collision:</b> A–C dan A–D sama-sama masuk bucket 3. Bucket menyimpan total gabungan 2, bukan identitas pasangan yang membentuknya.</aside></section>
 }
 
 export function BucketStateSlide() {
@@ -132,6 +132,7 @@ export function MeasurementSlide() {
 export function MemoryConclusionSlide() {
   return <section className="memory-slide" aria-labelledby="memory-conclusion-title"><div className="section-heading"><p>14 — KESIMPULAN</p><h2 id="memory-conclusion-title">Alur Lengkap <span>Perhitungan Memori</span></h2></div><div className="memory-conclusion-grid"><article><span>1 · FILTER</span><strong>Bitmap menyaring</strong><p>Bucket 0 menghentikan kandidat sebelum count dilakukan pada Pass 2.</p></article><article><span>2 · REPRESENTASI</span><strong>List ≠ bit-packed</strong><p>Implementasi Python menggunakan memori lebih besar daripada ukuran ideal bitmap.</p></article><article><span>3 · FAKTOR UTAMA</span><strong>Jumlah kandidat</strong><p>Support rendah meningkatkan jumlah dictionary entry dan peak memory.</p></article></div><aside className="memory-final-statement">Urutannya adalah: basket dibaca → item dan bucket dihitung → bitmap dibentuk → kandidat disaring dan dihitung → frequent pair dipilih → rule dibuat → puncak alokasi dilaporkan.</aside></section>
 }
+
 
 
 

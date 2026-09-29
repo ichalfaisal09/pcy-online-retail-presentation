@@ -13,7 +13,7 @@ export function BasketFormationSlide() {
 }
 
 export function CleanMetadataSlide() {
-  return <section className="complete-slide metadata-complete-slide" aria-labelledby="metadata-complete-title"><div className="section-heading"><p>06 — METADATA DATA BERSIH</p><h2 id="metadata-complete-title">Skala Input <span>PCY</span></h2></div><div className="metadata-equation"><div><span>BASKET BERSIH</span><strong>18.294</strong></div><b>×</b><div><span>PRODUK UNIK</span><strong>4.059</strong></div></div><div className="possible-pair-formula"><span>KOMBINASI PASANGAN MAKSIMUM</span><strong>4.059 × 4.058 ÷ 2 = 8.235.711</strong><p>Angka ini adalah seluruh kombinasi teoritis dua produk. PCY tidak menyimpan counter untuk seluruh kombinasi tersebut.</p></div><aside className="complete-statement">Hash bucket dan bitmap menyaring ruang kandidat sebelum penghitungan pasangan eksak pada Pass 2.</aside></section>
+  return <section className="complete-slide metadata-complete-slide" aria-labelledby="metadata-complete-title"><div className="section-heading"><p>06 — METADATA DATA BERSIH</p><h2 id="metadata-complete-title">Skala Input <span>PCY</span></h2></div><div className="metadata-equation"><div><span>BASKET BERSIH</span><strong>18.294</strong></div><b>×</b><div><span>PRODUK UNIK</span><strong>4.059</strong></div></div><div className="possible-pair-formula notation-formula"><span>DEFINISI VARIABEL</span><p><b>n</b> = jumlah item atau produk unik di seluruh dataset</p><strong>Kombinasi pasangan maksimum = n(n−1) ÷ 2</strong><p className="notation-substitution">n = 4.059&nbsp;&nbsp;→&nbsp;&nbsp;4.059 × 4.058 ÷ 2 = <b>8.235.711</b></p><small>Rumus ini menunjukkan seluruh kombinasi teoritis dua produk. PCY tidak menyimpan counter untuk semuanya.</small></div><aside className="complete-statement">Hash bucket dan bitmap menyaring ruang kandidat sebelum penghitungan pasangan eksak pada Pass 2.</aside></section>
 }
 
 export function PCYConfigurationSlide() {
@@ -54,4 +54,5 @@ export function LimitationsSlide() {
   ]
   return <section className="complete-slide limitations-slide" aria-labelledby="limitations-title"><div className="section-heading"><p>33 — KETERBATASAN</p><h2 id="limitations-title">Batas Interpretasi <span>Hasil</span></h2></div><div className="limitations-list">{limitations.map(([title, text], index) => <article key={title}><span>{String(index + 1).padStart(2,'0')}</span><strong>{title}</strong><p>{text}</p></article>)}</div><aside className="complete-note">Hasil berlaku untuk dataset, proses pembersihan, fungsi hash, konfigurasi bucket, dan lingkungan pengujian yang digunakan.</aside></section>
 }
+
 

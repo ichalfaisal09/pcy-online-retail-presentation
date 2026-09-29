@@ -204,10 +204,10 @@ function App() {
     () => <SensitivityParameterSlide />,
     () => <PCYConfigurationSlide />,
     () => <WorkflowSlide />,
-    () => <TraceInputSlide />,
+    () => <TraceInputSlide showNotation />,
     () => <ItemCountTraceSlide />,
     () => <PairMatrixSlide />,
-    () => <PairHashTraceSlide />,
+    () => <PairHashTraceSlide showNotation />,
     () => <BucketStateSlide />,
     () => <BitmapTraceSlide />,
     () => <BitmapMemorySlide />,
@@ -245,6 +245,7 @@ function App() {
 }
 
 export default App
+
 
 
 
