@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import PreprocessingDataModal from './PreprocessingDataModal'
 import { SensitivityParameterSlide, SensitivityResultSlide } from './SensitivitySlides'
 import InfoTerm from './InfoTerm'
+import { AnalysisObjectiveSlide, BasketFormationSlide, BestRuleInterpretationSlide, CleanMetadataSlide, FalsePositiveSlide, LimitationsSlide, MemoryChangeAnalysisSlide, PCYConfigurationSlide, RuleDirectionSlide } from './CompleteSlides'
 import { BitmapMemorySlide, BitmapTraceSlide, BucketStateSlide, CandidateGateSlide, FrequentPairTraceSlide, ItemCountTraceSlide, MeasurementSlide, MemoryConclusionSlide, MemoryResultsSlide, PairMatrixSlide, MemoryTimelineSlide, MemoryTitleSlide, PairHashTraceSlide, RuleTraceSlide, TraceInputSlide } from './MemorySlides'
 import './App.css'
 
@@ -186,16 +187,55 @@ function App() {
   const isRevisionRoute = routePath === '/revisi-pcy'
   const isCalculationRoute = routePath === '/perhitungan-pcy'
   const isMemoryRoute = routePath === '/memori-pcy'
+  const isCompleteRoute = routePath === '/lengkap-pcy'
   const standardSlides = [() => <TitleSlide />, () => <BackgroundSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <MiningConceptSlide />, () => <ProblemSlide />, () => <WorkflowSlide />, () => <SensitivityParameterSlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <ConclusionSlide />, () => <MethodologySlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />, () => <ThanksSlide />]
   const calculationSlides = [() => <CalculationTitleSlide />, () => <DatasetSlide />, () => <PreprocessingSlide onOpenData={setActiveDataStage} />, () => <PreprocessingResultSlide />, () => <SensitivityParameterSlide />, () => <WorkflowSlide />, () => <MethodologySlide />, () => <SensitivityResultSlide />, () => <EvaluationSlide />, () => <AssociationRulesSlide />, () => <SupportComparisonSlide />, () => <SupportRulesAppendixSlide />]
   const memorySlides = [() => <MemoryTitleSlide />, () => <TraceInputSlide />, () => <ItemCountTraceSlide />, () => <PairMatrixSlide />, () => <PairHashTraceSlide />, () => <BucketStateSlide />, () => <BitmapTraceSlide />, () => <BitmapMemorySlide />, () => <CandidateGateSlide />, () => <FrequentPairTraceSlide />, () => <RuleTraceSlide />, () => <MemoryTimelineSlide />, () => <MemoryResultsSlide />, () => <MeasurementSlide />, () => <MemoryConclusionSlide />]
-  const slides = isMemoryRoute ? memorySlides : isCalculationRoute ? calculationSlides : standardSlides
+  const completeSlides = [
+    () => <TitleSlide />,
+    () => <AnalysisObjectiveSlide />,
+    () => <DatasetSlide />,
+    () => <PreprocessingSlide onOpenData={setActiveDataStage} />,
+    () => <PreprocessingResultSlide />,
+    () => <BasketFormationSlide />,
+    () => <CleanMetadataSlide />,
+    () => <MiningConceptSlide />,
+    () => <ProblemSlide />,
+    () => <SensitivityParameterSlide />,
+    () => <PCYConfigurationSlide />,
+    () => <WorkflowSlide />,
+    () => <TraceInputSlide />,
+    () => <ItemCountTraceSlide />,
+    () => <PairMatrixSlide />,
+    () => <PairHashTraceSlide />,
+    () => <BucketStateSlide />,
+    () => <BitmapTraceSlide />,
+    () => <BitmapMemorySlide />,
+    () => <CandidateGateSlide />,
+    () => <FalsePositiveSlide />,
+    () => <FrequentPairTraceSlide />,
+    () => <RuleDirectionSlide />,
+    () => <RuleTraceSlide />,
+    () => <MethodologySlide />,
+    () => <SensitivityResultSlide />,
+    () => <MemoryTimelineSlide />,
+    () => <MemoryChangeAnalysisSlide />,
+    () => <SupportComparisonSlide />,
+    () => <EvaluationSlide />,
+    () => <AssociationRulesSlide />,
+    () => <SupportRulesAppendixSlide />,
+    () => <BestRuleInterpretationSlide />,
+    () => <LimitationsSlide />,
+    () => <ConclusionSlide />,
+    () => <ThanksSlide />,
+  ]
+  const slides = isCompleteRoute ? completeSlides : isMemoryRoute ? memorySlides : isCalculationRoute ? calculationSlides : standardSlides
   const lastSlide = slides.length - 1
   const next = () => setSlide((value) => Math.min(value + 1, lastSlide))
   const previous = () => setSlide((value) => Math.max(value - 1, 0))
   useEffect(() => { const handleKey = (event) => { if (activeDataStage || ['INPUT', 'TEXTAREA'].includes(event.target.tagName)) return; if (event.key === 'ArrowRight') setSlide((value) => Math.min(value + 1, lastSlide)); if (event.key === 'ArrowLeft') setSlide((value) => Math.max(value - 1, 0)) }; window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey) }, [activeDataStage, lastSlide])
-  useEffect(() => { document.title = isMemoryRoute ? 'Memori PCY | Perhitungan dan Pengukuran' : isCalculationRoute ? 'Perhitungan PCY | Input, Proses, Output' : isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isCalculationRoute, isMemoryRoute, isRevisionRoute])
-  return <main className={`presentation slide-${slide}${isCalculationRoute ? ' calculation-route' : ''}${isMemoryRoute ? ' memory-route' : ''}`}>
+  useEffect(() => { document.title = isCompleteRoute ? 'Presentasi Lengkap PCY | Online Retail' : isMemoryRoute ? 'Memori PCY | Perhitungan dan Pengukuran' : isCalculationRoute ? 'Perhitungan PCY | Input, Proses, Output' : isRevisionRoute ? 'Revisi PCY | Penerapan Algoritma PCY' : 'Penerapan Algoritma PCY' }, [isCalculationRoute, isCompleteRoute, isMemoryRoute, isRevisionRoute])
+  return <main className={`presentation slide-${slide}${isCalculationRoute ? ' calculation-route' : ''}${isMemoryRoute ? ' memory-route' : ''}${isCompleteRoute ? ' complete-route' : ''}`}>
     <div className="orb orb-one" aria-hidden="true" /><div className="orb orb-two" aria-hidden="true" /><div className="data-lines" aria-hidden="true" />
     <header className="slide-header"><span className="eyebrow">ANALISIS BIG DATA</span><span className="slide-count">{String(slide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span></header>
     {slides[slide]()}
@@ -205,6 +245,7 @@ function App() {
 }
 
 export default App
+
 
 
 
