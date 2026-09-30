@@ -6,7 +6,11 @@ import { AnalysisObjectiveSlide, BasketFormationSlide, BestRuleInterpretationSli
 import { BitmapMemorySlide, BitmapTraceSlide, BucketStateSlide, CandidateGateSlide, FrequentPairTraceSlide, ItemCountTraceSlide, MeasurementSlide, MemoryConclusionSlide, MemoryResultsSlide, PairMatrixSlide, MemoryTimelineSlide, MemoryTitleSlide, PairHashTraceSlide, RuleTraceSlide, TraceInputSlide } from './MemorySlides'
 import './App.css'
 
-const details = [['Nama', 'Faisal'], ['NIM', 'D082261012'], ['Mata Kuliah', 'Analisis Big Data'], ['Dosen Pengampu', 'Mukarramah Yusuf, B.Sc., M.Sc., Ph.D.']]
+const details = [['Penyusun 1', 'D082261012 — Faisal'], ['Penyusun 2', 'D082261035 — Janu Adwiyanto'], ['Mata Kuliah', 'Analisis Big Data'], ['Dosen Pengampu', 'Mukarramah Yusuf, B.Sc., M.Sc., Ph.D.']]
+
+function PresenterCredits() {
+  return <div className="presenter-credits"><span>D082261012 — FAISAL</span><i aria-hidden="true" /><span>D082261035 — JANU ADWIYANTO</span></div>
+}
 
 const backgroundPoints = [
   <>Data <strong>transaksi retail</strong> menyimpan informasi berharga mengenai pola pembelian konsumen yang dapat dianalisis.</>,
@@ -165,7 +169,7 @@ function SupportRulesAppendixSlide() {
   return <section className="support-rules-slide" aria-labelledby="support-rules-title"><div className="section-heading"><p>15 — LAMPIRAN ASSOCIATION RULE</p><h2 id="support-rules-title">Rule Teratas per <span>Minimum Support</span></h2></div><p className="support-rules-intro">Format metrik: support · confidence · interest. Nama produk lengkap sesuai deskripsi pada dataset Online Retail.</p><div className="support-rules-grid">{datasets.map((dataset) => <article className={dataset.support === '3%' ? 'support-rule-card selected-rule-card' : 'support-rule-card'} key={dataset.support}><header><b>{dataset.support}</b><span>{dataset.subtitle}</span></header><ol>{dataset.rules.map(([rule, metric]) => <li key={rule}><strong>{rule}</strong><em>{metric}</em></li>)}</ol></article>)}</div><aside className="support-rules-note"><b>Interpretasi perbandingan:</b> 1% menghasilkan rule dengan confidence dan interest tinggi, tetapi jumlah rule sangat banyak. Pada 2% dan 3%, rule Regency Teacup tetap dominan; 3% dipilih karena hasilnya lebih ringkas untuk dianalisis.</aside></section>
 }
 function ThanksSlide() {
-  return <section className="thanks-slide" aria-labelledby="thanks-title"><p>ANALISIS BIG DATA · FAISAL</p><h2 id="thanks-title">Terima <span>Kasih</span></h2><div className="thanks-line" aria-hidden="true"><i /><i /><i /></div><small>Penerapan Algoritma PCY untuk Frequent Itemset Mining</small></section>
+  return <section className="thanks-slide" aria-labelledby="thanks-title"><p>ANALISIS BIG DATA</p><h2 id="thanks-title">Terima <span>Kasih</span></h2><div className="thanks-line" aria-hidden="true"><i /><i /><i /></div><small>Penerapan Algoritma PCY untuk Frequent Itemset Mining</small><PresenterCredits /></section>
 }
 
 function TitleSlide() {
@@ -178,7 +182,7 @@ function TitleSlide() {
 }
 
 function CalculationTitleSlide() {
-  return <section className="calculation-title-slide" aria-labelledby="calculation-title"><p className="kicker">ALUR KOMPUTASI MARKET BASKET</p><h1 id="calculation-title">Perhitungan <span>PCY</span><br />dari Input hingga Output</h1><p className="subtitle">Rute teknis yang memuat pra-hitung data, proses PCY, dan hasil perhitungan aturan asosiasi.</p><div className="calculation-flow"><span>INPUT DATA</span><b>→</b><span>PRA-HITUNG</span><b>→</b><span>PROSES PCY</span><b>→</b><span>OUTPUT</span></div></section>
+  return <section className="calculation-title-slide" aria-labelledby="calculation-title"><p className="kicker">ALUR KOMPUTASI MARKET BASKET</p><h1 id="calculation-title">Perhitungan <span>PCY</span><br />dari Input hingga Output</h1><p className="subtitle">Rute teknis yang memuat pra-hitung data, proses PCY, dan hasil perhitungan aturan asosiasi.</p><div className="calculation-flow"><span>INPUT DATA</span><b>→</b><span>PRA-HITUNG</span><b>→</b><span>PROSES PCY</span><b>→</b><span>OUTPUT</span></div><PresenterCredits /></section>
 }
 function App() {
   const [slide, setSlide] = useState(0)

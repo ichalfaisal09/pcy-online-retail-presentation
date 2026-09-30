@@ -26,7 +26,7 @@ function TraceTable({ headers, rows, highlightLast = false }) {
 }
 
 export function MemoryTitleSlide() {
-  return <section className="calculation-title-slide memory-title-slide" aria-labelledby="memory-title"><p className="kicker">TRACE PERHITUNGAN PCY</p><h1 id="memory-title">Dari Basket hingga <span>Memori PCY</span></h1><p className="subtitle">Satu contoh yang diikuti langkah demi langkah: menghitung item, mengisi bucket, membuat bitmap, menyaring kandidat, dan membaca penggunaan memorinya.</p><div className="calculation-flow"><span>INPUT</span><b>→</b><span>PASS 1</span><b>→</b><span>BITMAP</span><b>→</b><span>PASS 2</span><b>→</b><span>OUTPUT</span></div></section>
+  return <section className="calculation-title-slide memory-title-slide" aria-labelledby="memory-title"><p className="kicker">TRACE PERHITUNGAN PCY</p><h1 id="memory-title">Dari Basket hingga <span>Memori PCY</span></h1><p className="subtitle">Satu contoh yang diikuti langkah demi langkah: menghitung item, mengisi bucket, membuat bitmap, menyaring kandidat, dan membaca penggunaan memorinya.</p><div className="calculation-flow"><span>INPUT</span><b>→</b><span>PASS 1</span><b>→</b><span>BITMAP</span><b>→</b><span>PASS 2</span><b>→</b><span>OUTPUT</span></div><div className="presenter-credits"><span>D082261012 — FAISAL</span><i aria-hidden="true" /><span>D082261035 — JANU ADWIYANTO</span></div></section>
 }
 
 export function TraceInputSlide({ showNotation = false }) {
